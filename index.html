@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tornado | Coming 15 November 2026 | Euronics</title>
+<meta name="description" content="Tornado, the next generation of hand drying from Euronics, launches on 15 November 2026. Available in stainless steel, gold and black. Start your booking now.">
+<meta property="og:title" content="Tornado. Coming 15 November 2026.">
+<meta property="og:description" content="The next generation of hand drying. Start your booking now.">
+<meta property="og:image" content="https://euronicsdigital.github.io/tornado-launch/assets/steel-front2.webp">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1A6372; --teal-d:#0e3a44; --aqua:#EAFFFE; --ink:#111212; --bg:#040b0c;
+  --muted:#8fb0b3; --line:rgba(234,255,254,.16); --err:#ff8a80;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--bg);color:var(--aqua);font-family:Montserrat,system-ui,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block}
+
+/* chrome */
+nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16px max(16px,4vw);background:linear-gradient(#040b0ccc,transparent);pointer-events:none}
+nav>*{pointer-events:auto}
+.logo img{height:24px;width:auto}
+.btn{display:inline-block;padding:11px 22px;border-radius:999px;background:var(--aqua);color:var(--ink);font:600 .86rem Montserrat,sans-serif;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{background:#fff;transform:translateY(-1px)}
+#bar{position:fixed;top:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,var(--teal),var(--aqua));transform-origin:left;transform:scaleX(0);z-index:40}
+.eyebrow{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+
+/* ===== the film ===== */
+#film{height:1100vh;position:relative}
+#stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--bg)}
+.layer{position:absolute;inset:0;pointer-events:none;will-change:opacity,transform}
+#glow{background:radial-gradient(46% 46% at 50% 56%,rgba(150,205,220,.42),rgba(26,99,114,.18) 45%,transparent 72%);opacity:0}
+#beam{background:conic-gradient(from 180deg at 50% -8%,transparent 160deg,rgba(234,255,254,.10) 176deg,rgba(234,255,254,.16) 180deg,rgba(234,255,254,.10) 184deg,transparent 200deg);opacity:0;mix-blend-mode:screen}
+#grid{opacity:0;background-image:linear-gradient(rgba(234,255,254,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(234,255,254,.07) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(60% 55% at 50% 52%,#000,transparent 80%);-webkit-mask-image:radial-gradient(60% 55% at 50% 52%,#000,transparent 80%)}
+#vig{background:radial-gradient(130% 100% at 50% 50%,transparent 62%,#000 100%);opacity:.55}
+/* square drawing box: everything product-related lives in it so overlays align */
+#box{position:absolute;left:50%;top:60%;width:min(66vh,92vw,720px);aspect-ratio:1;transform:translate(-50%,-50%)}
+#orbit{position:absolute;inset:0;perspective:1100px;pointer-events:none}
+.ring{position:absolute;left:50%;top:52%;border-radius:50%;opacity:0;will-change:transform,opacity}
+#ringA{width:128%;aspect-ratio:1;border:1px solid rgba(234,255,254,.28)}
+#ringB{width:156%;aspect-ratio:1;border:1px dashed rgba(234,255,254,.16)}
+.ring::after{content:"";position:absolute;left:50%;top:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--aqua);box-shadow:0 0 14px 3px rgba(234,255,254,.8)}
+#rig{position:absolute;inset:0;perspective:1400px}
+#obj{position:absolute;inset:0;will-change:transform,opacity,filter}
+#obj img,#sketchwrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+#obj img{opacity:0;filter:drop-shadow(0 40px 50px rgba(0,0,0,.7))}
+#sheen{position:absolute;inset:0;mix-blend-mode:overlay;opacity:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;background:linear-gradient(104deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%);background-size:320% 100%}
+#sketchwrap{position:absolute;inset:0;opacity:0}
+#sketchwrap .reveal{position:absolute;inset:0;clip-path:inset(0 100% 0 0)}
+#pencil{position:absolute;top:6%;bottom:6%;width:2px;background:linear-gradient(transparent,var(--aqua),transparent);box-shadow:0 0 18px var(--aqua);opacity:0;left:0}
+#dims{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#dims path{stroke:var(--aqua);stroke-width:2.4;fill:none;vector-effect:non-scaling-stroke}
+#dims text{fill:var(--aqua);font:600 38px Montserrat,sans-serif;letter-spacing:.06em;opacity:0}
+#air{position:absolute;inset:0;width:100%;height:100%}
+.hs{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--aqua);opacity:0;box-shadow:0 0 0 0 rgba(234,255,254,.6);animation:ping 1.8s infinite;pointer-events:none}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(234,255,254,.55)}100%{box-shadow:0 0 0 18px rgba(234,255,254,0)}}
+
+/* copy */
+.copy{position:absolute;left:0;right:0;text-align:center;padding:0 20px;will-change:opacity,transform;opacity:0;pointer-events:none}
+.copy h1,.copy h2{margin:0;font-weight:800;letter-spacing:-.025em;line-height:1.02}
+.copy h1{font-size:clamp(2.6rem,9vw,7.4rem)}
+.copy h2{font-size:clamp(1.9rem,min(5.4vw,6.6vh),4.8rem)}
+.copy p.sub{margin:16px auto 0;max-width:46ch;color:var(--muted);font-size:clamp(.95rem,1.6vw,1.2rem);font-weight:300}
+.copy.top{top:11vh}.copy.mid{top:50%}
+.hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-align:center}
+.hint::after{content:"";display:block;width:1px;height:36px;margin:10px auto 0;background:linear-gradient(var(--aqua),transparent);animation:drip 1.9s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* spec callouts */
+.spec{position:absolute;width:min(300px,42vw);opacity:0;will-change:opacity,transform;pointer-events:none}
+.spec::before{content:"";display:block;width:44px;height:2px;background:var(--aqua);margin-bottom:14px;opacity:.7}
+.spec .n{font-size:clamp(2.4rem,6.4vw,5rem);font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.spec .n small{font-size:.32em;font-weight:500;color:var(--muted);margin-left:6px;letter-spacing:.04em}
+.spec h3{margin:10px 0 4px;font-size:1rem;font-weight:600}
+.spec p{margin:0;color:var(--muted);font-size:.86rem}
+.spec.l{left:max(18px,6vw);text-align:left}
+.spec.r{right:max(18px,6vw);text-align:right}.spec.r::before{margin-left:auto}
+.spec.t{top:26vh}.spec.m{top:44vh}.spec.b{top:62vh}
+.chip{position:absolute;left:50%;bottom:3.2vh;display:flex;gap:10px;opacity:0;transform:translateX(-50%);white-space:nowrap}
+.chip span{display:flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.chip span i{width:11px;height:11px;border-radius:50%;display:block;border:1px solid rgba(255,255,255,.35)}
+.chip span.on{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+
+/* ===== sections after the film ===== */
+section.s{padding:120px max(18px,6vw);max-width:1180px;margin:0 auto}
+.rv{opacity:0;transform:translateY(34px);transition:opacity 1s ease,transform 1s ease}
+.rv.in{opacity:1;transform:none}
+h2.big{font-size:clamp(1.9rem,5vw,3.6rem);line-height:1.08;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
+p.lead{color:var(--muted);max-width:56ch;margin:0 0 34px;font-weight:300;font-size:1.05rem}
+
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feat{border:1px solid var(--line);border-radius:16px;padding:22px 18px;background:#ffffff06}
+.feat b{display:block;font-size:.98rem;margin-bottom:4px}
+.feat span{color:var(--muted);font-size:.84rem}
+.ico{width:34px;height:34px;margin-bottom:14px;stroke:var(--aqua);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+.glance{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+.glance div{border-top:1px solid var(--line);padding-top:16px}
+.glance b{display:block;font-size:clamp(1.6rem,3.2vw,2.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.glance b small{font-size:.4em;font-weight:500;color:var(--muted);margin-left:4px;letter-spacing:.03em}
+.glance span{display:block;margin-top:6px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.size{color:var(--muted);font-size:.9rem;margin:0}
+
+.finish{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+#fview{position:relative;aspect-ratio:1;border-radius:24px;background:radial-gradient(60% 60% at 50% 45%,var(--fg,#243a3f),#06100f 78%);border:1px solid var(--line);overflow:hidden}
+#fview img{position:absolute;inset:4%;width:92%;height:92%;object-fit:contain;opacity:0;transition:opacity .45s;filter:drop-shadow(0 30px 40px #000a)}
+#fview img.on{opacity:1}
+.pills{display:flex;gap:10px;margin:0 0 18px;flex-wrap:wrap}
+.pill{padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--aqua);font:600 .82rem Montserrat,sans-serif;cursor:pointer}
+.pill[aria-pressed="true"]{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+.thumbs{display:flex;gap:10px;margin-top:18px}
+.thumb{width:68px;height:68px;border-radius:12px;border:1px solid var(--line);background:#ffffff08;padding:4px;cursor:pointer}
+.thumb[aria-pressed="true"]{border-color:var(--aqua)}
+.thumb img{width:100%;height:100%;object-fit:contain}
+
+.photo{position:relative;height:min(100vh,920px);overflow:hidden;margin:0}
+.photo img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover;object-position:50% 12%;will-change:transform}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(#040b0c 0%,transparent 22%,transparent 60%,#040b0c 100%)}
+.photo figcaption{position:absolute;z-index:2;left:max(18px,6vw);bottom:9%;max-width:520px}
+.photo figcaption h2{font-size:clamp(1.8rem,4.6vw,3.4rem);margin:0 0 8px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.photo figcaption p{margin:0;color:#cfe6e6;font-weight:300}
+.photo small{display:block;margin-top:10px;font-size:.72rem;color:var(--muted)}
+
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:560px;margin-top:26px}
+.cd div{border:1px solid var(--line);border-radius:14px;padding:18px 8px;text-align:center;background:#ffffff08}
+.cd b{display:block;font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;font-variant-numeric:tabular-nums}
+.cd span{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+#book{border-top:1px solid var(--line)}
+form{background:#ffffff0a;border:1px solid var(--line);border-radius:20px;padding:clamp(18px,4vw,36px);max-width:780px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{grid-column:1/-1}
+label{display:block;font-size:.8rem;font-weight:600;margin-bottom:5px}
+.req{color:var(--err)}
+input,select,textarea{width:100%;font:inherit;font-size:.95rem;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0b1b1c;color:var(--aqua)}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--aqua);outline-offset:1px}
+.phone{display:flex}.phone span{display:flex;align-items:center;padding:0 12px;border:1px solid var(--line);border-right:0;border-radius:10px 0 0 10px;color:var(--muted);background:#0f2a2d}
+.phone input{border-radius:0 10px 10px 0}
+fieldset{border:0;padding:0;margin:0}legend{font-size:.8rem;font-weight:600;margin-bottom:6px;padding:0}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opts.four{grid-template-columns:repeat(4,1fr)}
+.opt input{position:absolute;opacity:0}
+.opt span{display:block;text-align:center;padding:12px 6px;border:1px solid var(--line);border-radius:10px;font-size:.85rem;cursor:pointer}
+.opt input:checked+span{background:var(--aqua);color:var(--ink);font-weight:600}
+.opt input:focus-visible+span{outline:2px solid var(--aqua);outline-offset:2px}
+.err-msg{display:none;color:var(--err);font-size:.76rem;margin-top:4px}
+.invalid .err-msg{display:block}.invalid input,.invalid select{border-color:var(--err)}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--muted)}
+.consent input{width:auto;margin-top:3px}
+button.submit{width:100%;padding:15px;font-size:1rem}
+button.submit:disabled{opacity:.6;cursor:wait}
+.hp{position:absolute;left:-9999px}
+.success{display:none;text-align:center;padding:40px 8px}.success h3{font-size:1.6rem;margin:0 0 8px}.success p{color:var(--muted);margin:0 auto;max-width:44ch}
+form.done .formbody{display:none}form.done .success{display:block}
+footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font-size:.78rem;color:var(--muted)}
+
+@media(max-width:820px){
+  .feats{grid-template-columns:1fr 1fr}
+  .glance{grid-template-columns:1fr 1fr}
+  .finish{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}.opts,.opts.four{grid-template-columns:1fr 1fr}
+  #box{top:53%;width:min(86vw,54vh)}
+  .spec{width:calc(100% - 36px);left:18px!important;right:auto!important;text-align:left!important;top:auto!important;bottom:7vh}
+  .spec.r::before{margin-left:0}
+  .copy.top{top:13vh}
+  .chip span{padding:8px 11px;font-size:.62rem;letter-spacing:.08em}
+  section.s{padding:84px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}.hint::after,.hs{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<nav>
+  <a class="logo" href="https://euronics.co.in" aria-label="Euronics"><img src="brand/euronics-wordmark-white.svg" alt="Euronics" height="24"></a>
+  <a class="btn" href="#book">Book now</a>
+</nav>
+
+<!-- ===================== THE FILM ===================== -->
+<section id="film" aria-label="Tornado launch film">
+  <div id="stage">
+    <div class="layer" id="glow"></div>
+    <div class="layer" id="beam"></div>
+    <div class="layer" id="grid"></div>
+
+    <div id="box">
+      <div id="orbit"><div class="ring" id="ringB"></div><div class="ring" id="ringA"></div></div>
+      <div id="rig"><div id="obj">
+        <img src="assets/steel-front2.webp" alt="Euronics Tornado stainless steel hand dryer, front view" data-f="front">
+        <img src="assets/steel-q2.webp" alt="" data-f="q2" decoding="async">
+        <img src="assets/steel-q1.webp" alt="" data-f="q1" decoding="async">
+        <img src="assets/steel-side.webp" alt="" data-f="side" decoding="async">
+        <img src="assets/steel-rq.webp" alt="" data-f="rq" decoding="async">
+        <img src="assets/steel-back.webp" alt="" data-f="back" decoding="async">
+        <div id="sheen"></div>
+      </div></div>
+      <div id="sketchwrap">
+        <div class="reveal" id="sketchreveal"><img src="assets/sketch-front.webp" alt=""></div>
+        <div id="pencil"></div>
+        <!-- viewBox matches the 1600px source so dimension lines sit on the drawing -->
+        <svg id="dims" viewBox="0 0 1600 1600" aria-hidden="true">
+          <path id="dW" d="M199 1500H1401M199 1470V1530M1401 1470V1530"/>
+          <path id="dH" d="M110 126V1435M80 126H140M80 1435H140"/>
+          <path id="dC" d="M619 62H987M619 32V92M987 32V92"/>
+          <text id="tW" x="800" y="1590" text-anchor="middle">457 mm</text>
+          <text id="tH" x="56" y="780" text-anchor="middle" transform="rotate(-90 56 780)">500 mm</text>
+          <text id="tC" x="803" y="22" text-anchor="middle">142 mm</text>
+        </svg>
+      </div>
+      <canvas id="air" aria-hidden="true"></canvas>
+      <i class="hs" id="h1" style="left:25%;top:79%"></i>
+      <i class="hs" id="h2" style="left:50%;top:72%"></i>
+      <i class="hs" id="h3" style="left:50%;top:15%"></i>
+      <i class="hs" id="h4" style="left:58%;top:42%"></i>
+    </div>
+
+    <div class="layer" id="vig"></div>
+
+    <div class="copy mid" id="c0">
+      <p class="eyebrow">Euronics &middot; 15 . 11 . 2026</p>
+      <h1>Something great<br>is coming.</h1>
+      <p class="sub">The next generation of hand drying.</p>
+    </div>
+    <div class="copy top" id="c1">
+      <p class="eyebrow">01 &mdash; Drawn</p>
+      <h2>Every line,<br>to the millimetre.</h2>
+      <p class="sub">457 &times; 500 &times; 146 mm. One column, two blades.</p>
+    </div>
+    <div class="copy top" id="c2">
+      <p class="eyebrow">02 &mdash; Revealed</p>
+      <h2>Meet Tornado.</h2>
+      <p class="sub">Stainless steel 304. Touch-free. Brushless.</p>
+    </div>
+    <div class="copy top" id="c3">
+      <p class="eyebrow">03 &mdash; Every angle</p>
+      <h2>Considered<br>from every side.</h2>
+    </div>
+    <div class="copy top" id="c4">
+      <p class="eyebrow">04 &mdash; Performance</p>
+      <h2>Built to move air.</h2>
+    </div>
+    <div class="copy top" id="c5">
+      <p class="eyebrow">05 &mdash; Finish</p>
+      <h2>Stainless steel.<br>Gold. Black.</h2>
+    </div>
+
+    <div class="spec l t" id="s1"><div class="n"><span data-to="110">0</span><small>m/s</small></div><h3>Air speed</h3><p>Rated air speed at the blades.</p></div>
+    <div class="spec r m" id="s2"><div class="n"><span data-to="7">0</span>&ndash;<span data-to="10">0</span><small>sec</small></div><h3>Hand dry time</h3><p>Automatic, touch-free operation.</p></div>
+    <div class="spec l b" id="s3"><div class="n">SS&nbsp;304</div><h3>Stainless steel casing</h3><p>A finish that suits busy washrooms.</p></div>
+    <div class="spec r t" id="s4"><div class="n">HEPA</div><h3>Filtered air</h3><p>A HEPA filter sits in the air path.</p></div>
+
+    <div class="chip" id="chip"><span class="on" id="cs"><i style="background:linear-gradient(135deg,#f4f7f8,#8c969a)"></i>Stainless steel</span><span id="cgd"><i style="background:linear-gradient(135deg,#f0d78a,#b8903a)"></i>Gold</span><span id="cbk"><i style="background:linear-gradient(135deg,#3a3d3f,#0a0b0b)"></i>Black</span></div>
+    <div class="hint" id="hint">Scroll</div>
+  </div>
+</section>
+
+<!-- ===================== AFTER THE FILM ===================== -->
+<section class="s" id="features">
+  <p class="eyebrow rv">Why Tornado</p>
+  <h2 class="big rv">Hygiene, engineered<br>into the details.</h2>
+  <p class="lead rv">Touch-free from start to finish, in stainless steel 304.</p>
+  <div class="feats">
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z"/><path d="M12 21v-6"/></svg><b>Sustainable</b><span>Designed to cut single-use paper.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><b>Saves electricity</b><span>Brushless motor with automatic sensing.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 9h6M9 13h6"/></svg><b>Saves tissue paper</b><span>Dries hands with air, not paper.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M7 11V6a1.5 1.5 0 0 1 3 0v4m0-1V4.5a1.5 1.5 0 0 1 3 0V10m0-.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-3a1.5 1.5 0 0 1 2.5-1.5L7 14"/></svg><b>Touchless operation</b><span>Sensor range of 8 to 12 cm.</span></div>
+  </div>
+</section>
+
+<section class="s" id="finish">
+  <div class="finish">
+    <div id="fview" class="rv" role="img" aria-label="Tornado in the selected finish and angle">
+      <img src="assets/steel-front2.webp" alt="" class="on" data-set="steel" data-i="0">
+      <img src="assets/steel-q2.webp" alt="" data-set="steel" data-i="1" loading="lazy">
+      <img src="assets/steel-side.webp" alt="" data-set="steel" data-i="2" loading="lazy">
+      <img src="assets/steel-back.webp" alt="" data-set="steel" data-i="3" loading="lazy">
+      <img src="assets/gold-1.webp" alt="" data-set="gold" data-i="0" loading="lazy">
+      <img src="assets/gold-4.webp" alt="" data-set="gold" data-i="1" loading="lazy">
+      <img src="assets/gold-3.webp" alt="" data-set="gold" data-i="2" loading="lazy">
+      <img src="assets/gold-5.webp" alt="" data-set="gold" data-i="3" loading="lazy">
+      <img src="assets/black-1.webp" alt="" data-set="black" data-i="0" loading="lazy">
+      <img src="assets/black-2.webp" alt="" data-set="black" data-i="1" loading="lazy">
+      <img src="assets/black-6.webp" alt="" data-set="black" data-i="2" loading="lazy">
+      <img src="assets/black-4.webp" alt="" data-set="black" data-i="3" loading="lazy">
+    </div>
+    <div>
+      <p class="eyebrow rv">Finishes</p>
+      <h2 class="big rv">Three finishes.<br>Turn each one around.</h2>
+      <div class="pills rv" id="pills"><button class="pill" data-set="steel" aria-pressed="true">Stainless steel</button><button class="pill" data-set="gold" aria-pressed="false">Gold</button><button class="pill" data-set="black" aria-pressed="false">Black</button></div>
+      <p class="lead rv" style="margin:0">Four views of each finish.</p>
+      <div class="thumbs rv" id="thumbs"></div>
+    </div>
+  </div>
+</section>
+
+<figure class="photo">
+  <img src="assets/lifestyle-marble.webp" alt="A Tornado hand dryer in a marble-clad washroom, in use" loading="lazy" id="phimg">
+  <figcaption class="rv">
+    <h2>Made for washrooms people remember.</h2>
+    <p>Corporate, hospitality, healthcare, education and infrastructure.</p>
+    <small>Stainless steel finish shown.</small>
+  </figcaption>
+</figure>
+
+<section class="s" id="specs">
+  <p class="eyebrow rv">At a glance</p>
+  <h2 class="big rv">What matters.</h2>
+  <div class="glance rv">
+    <div><b>110<small>m/s</small></b><span>Air speed</span></div>
+    <div><b>7&ndash;10<small>sec</small></b><span>Hand dry time</span></div>
+    <div><b>8&ndash;12<small>cm</small></b><span>Touch-free sensing</span></div>
+    <div><b>SS&nbsp;304</b><span>Casing</span></div>
+    <div><b>HEPA</b><span>Filtered air</span></div>
+  </div>
+  <p class="size rv">457 &times; 500 &times; 146 mm &middot; 220&ndash;240 V &middot; Full technical data sheet on request.</p>
+</section>
+
+<section class="s" id="when">
+  <p class="eyebrow rv">Launch</p>
+  <h2 class="big rv">Tornado arrives<br>15 November 2026.</h2>
+  <div class="cd rv" id="cd">
+    <div><b data-u="d">--</b><span>Days</span></div>
+    <div><b data-u="h">--</b><span>Hours</span></div>
+    <div><b data-u="m">--</b><span>Mins</span></div>
+    <div><b data-u="s">--</b><span>Secs</span></div>
+  </div>
+</section>
+
+<section class="s" id="book">
+  <p class="eyebrow rv">Early booking</p>
+  <h2 class="big rv">Start your booking now.</h2>
+  <p class="lead rv">Tell us about your requirement and we will contact you with launch details and early-booking availability. Booking requests are subject to confirmation.</p>
+
+  <form class="rv" id="f" novalidate>
+    <div class="formbody"><div class="grid">
+      <div class="field"><label for="name">Full name <span class="req">*</span></label><input id="name" name="name" autocomplete="name" required><div class="err-msg">Please enter your name.</div></div>
+      <div class="field"><label for="company">Company / organisation <span class="req">*</span></label><input id="company" name="company" autocomplete="organization" required><div class="err-msg">Please enter your organisation.</div></div>
+      <div class="field"><label for="email">Work email <span class="req">*</span></label><input id="email" name="email" type="email" autocomplete="email" required><div class="err-msg">Enter a valid email address.</div></div>
+      <div class="field"><label for="phone">Mobile <span class="req">*</span></label><div class="phone"><span>+91</span><input id="phone" name="phone" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="10-digit number" required></div><div class="err-msg">Enter a valid 10-digit mobile number.</div></div>
+      <div class="field"><label for="city">City <span class="req">*</span></label><input id="city" name="city" autocomplete="address-level2" required><div class="err-msg">Please enter your city.</div></div>
+      <div class="field"><label for="sector">Sector</label><select id="sector" name="sector"><option value="">Select</option><option>Corporate</option><option>Hospitality</option><option>Healthcare</option><option>Education</option><option>Industrial</option><option>Government</option><option>Infrastructure</option><option>Other</option></select></div>
+      <fieldset class="full"><legend>I am interested in</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="interest" value="Early booking" checked><span>Early booking</span></label>
+          <label class="opt"><input type="radio" name="interest" value="Live demo"><span>A live demo</span></label>
+          <label class="opt"><input type="radio" name="interest" value="Launch updates"><span>Launch updates</span></label>
+        </div></fieldset>
+      <fieldset class="full"><legend>Preferred finish</legend>
+        <div class="opts four">
+          <label class="opt"><input type="radio" name="finish" value="Stainless steel"><span>Stainless steel</span></label>
+          <label class="opt"><input type="radio" name="finish" value="Gold"><span>Gold</span></label>
+          <label class="opt"><input type="radio" name="finish" value="Black"><span>Black</span></label>
+          <label class="opt"><input type="radio" name="finish" value="" checked><span>Undecided</span></label>
+        </div></fieldset>
+      <div class="field"><label for="units">Approx. units needed</label><input id="units" name="units" type="number" min="1" placeholder="e.g. 10"></div>
+      <div class="field"><label for="when">Planned installation</label><select id="when" name="when"><option value="">Select</option><option>Within 1 month</option><option>1 &ndash; 3 months</option><option>3 &ndash; 6 months</option><option>Just exploring</option></select></div>
+      <div class="field full"><label for="notes">Anything we should know?</label><textarea id="notes" name="notes" placeholder="Site type, number of washrooms, current setup…"></textarea></div>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="consent full"><input type="checkbox" id="consent" required><span>I agree to be contacted by Euronics about Tornado. <span class="req">*</span></span></label>
+      <div class="full"><button class="btn submit" type="submit">Book now</button><div class="err-msg" id="formerr" style="text-align:center;margin-top:8px"></div></div>
+    </div></div>
+    <div class="success" role="status" aria-live="polite"><h3>You are on the list.</h3><p id="okmsg">Thank you. Our team will be in touch with launch details and early-booking availability.</p></div>
+  </form>
+</section>
+
+<footer>&copy; Euronics Industries Pvt. Ltd. &middot; Elevating Hygiene Everyday</footer>
+
+<script>
+const CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbzCEyGxQwCIfPsu7YHaFWmsnP7ClZKx9716XDu4ToMHmgsHgyWj87_gb-4Zv0jM1Iviwg/exec",
+  launch: "2026-11-15T00:00:00+05:30"
+};
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (p, a, b) => clamp((p - a) / (b - a));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 0..1: fade in over [a,b], hold, fade out over [c,d]
+const win = (p, a, b, c, d) => Math.min(seg(p, a, b), 1 - seg(p, c, d));
+
+/* ---------- scene refs ---------- */
+const film = $("film"), box = $("box"), obj = $("obj"), glow = $("glow"), beam = $("beam"), grid = $("grid"), bar = $("bar");
+const frames = {}; obj.querySelectorAll("img").forEach(i => frames[i.dataset.f] = i);
+const ORDER = ["front", "q2", "q1", "side", "rq", "back"];          // the turn, front to back
+const sheen = $("sheen"), ringA = $("ringA"), ringB = $("ringB");
+const sketchWrap = $("sketchwrap"), sketchReveal = $("sketchreveal"), pencil = $("pencil");
+const dW = $("dW"), dH = $("dH"), dC = $("dC"), tW = $("tW"), tH = $("tH"), tC = $("tC");
+[dW, dH, dC].forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p._L = L; });
+const copy = ["c0","c1","c2","c3","c4","c5"].map($);
+const specs = ["s1","s2","s3","s4"].map($);
+const hs = ["h1","h2","h3","h4"].map($);
+const air = $("air"), actx = air.getContext("2d"), chip = $("chip"), hint = $("hint");
+const chipEls = [$("cs"), $("cgd"), $("cbk")];
+let sheenKey = "";
+
+/* ---------- airflow particles (blade exits, in the 1600px source space) ---------- */
+let AW = 0, parts = [];
+function sizeAir() { const r = box.getBoundingClientRect(); const d = Math.min(devicePixelRatio || 1, 2); air.width = r.width * d; air.height = r.height * d; AW = r.width * d; }
+sizeAir(); addEventListener("resize", sizeAir);
+function spawn() {
+  const left = Math.random() < .5, u = AW / 1600;
+  const x = (left ? 230 + Math.random() * 360 : 1010 + Math.random() * 360) * u;
+  parts.push({ x, y: 1330 * u, vy: (7 + Math.random() * 9) * u, vx: (left ? -1 : 1) * Math.random() * 1.2 * u, len: (60 + Math.random() * 120) * u, a: .5 + Math.random() * .4 });
+}
+function drawAir(power) {
+  actx.clearRect(0, 0, air.width, air.height);
+  if (power < .02) { parts.length = 0; return; }
+  for (let i = 0; i < 4 * power; i++) spawn();
+  actx.lineCap = "round";
+  parts = parts.filter(q => q.y < AW * 1.05);
+  for (const q of parts) {
+    q.y += q.vy; q.x += q.vx;
+    const fade = clamp(1 - (q.y - 1330 * AW / 1600) / (AW * .22));
+    actx.strokeStyle = "rgba(234,255,254," + (q.a * fade * power).toFixed(3) + ")"; actx.lineWidth = Math.max(1, AW / 600);
+    actx.beginPath(); actx.moveTo(q.x, q.y - q.len); actx.lineTo(q.x, q.y); actx.stroke();
+  }
+}
+
+/* ---------- pointer tilt (desktop) ---------- */
+let tx = 0, ty = 0, cx = 0, cy = 0;
+addEventListener("pointermove", e => { if (e.pointerType === "touch") return; tx = (e.clientX / innerWidth - .5); ty = (e.clientY / innerHeight - .5); }, { passive: true });
+
+/* ---------- the master timeline ---------- */
+let cur = 0; const counted = {};
+function progress() { const m = film.offsetHeight - innerHeight; return clamp(-film.getBoundingClientRect().top / m); }
+
+function render(p) {
+  const mobile = innerWidth < 820;
+  bar.style.transform = "scaleX(" + clamp(scrollY / (document.documentElement.scrollHeight - innerHeight)) + ")";
+
+  // --- copy windows ---
+  const W = [[1, .12, .16, .27, .31], [2, .34, .38, .44, .48], [3, .50, .54, .62, .66], [4, .68, .71, .86, .89], [5, .92, .95, 1.1, 1.2]];
+  copy[0].style.opacity = 1 - seg(p, .07, .11);
+  copy[0].style.transform = "translateY(calc(-50% - " + (seg(p, .0, .11) * 30) + "px))";
+  W.forEach(([i, a, b, c, d]) => {
+    const o = win(p, a, b, c, d);
+    copy[i].style.opacity = o; copy[i].style.transform = "translateY(" + ((1 - o) * 26) + "px)";
+  });
+  hint.style.opacity = 1 - seg(p, 0, .04);
+
+  // --- chapter 1: the sketch draws itself, dimensions follow ---
+  const sk = win(p, .10, .14, .32, .38);
+  sketchWrap.style.opacity = sk;
+  grid.style.opacity = sk * .9;
+  const draw = ease(seg(p, .12, .27));
+  sketchReveal.style.clipPath = "inset(0 " + (100 - draw * 100) + "% 0 0)";
+  pencil.style.left = (draw * 100) + "%"; pencil.style.opacity = draw > .01 && draw < .99 ? 1 : 0;
+  const dm = ease(seg(p, .20, .31));
+  dW.style.strokeDashoffset = dW._L * (1 - clamp(dm * 3)); dH.style.strokeDashoffset = dH._L * (1 - clamp(dm * 3 - .6)); dC.style.strokeDashoffset = dC._L * (1 - clamp(dm * 3 - 1.2));
+  tW.style.opacity = seg(dm, .4, .7); tH.style.opacity = seg(dm, .6, .85); tC.style.opacity = seg(dm, .8, 1);
+
+  // --- chapters 2–4: the steel unit emerges out of the dark, turns, performs ---
+  const emerge = ease(seg(p, .30, .41));
+  const turn = seg(p, .46, .66);
+  const spec = seg(p, .68, .90);
+  const fin = seg(p, .91, .99);
+
+  // frame weights: front -> three-quarters -> side -> back -> front
+  const x = turn * ORDER.length;
+  let dom = "front", best = -1;
+  ORDER.forEach((k, i) => {
+    let w = clamp(1 - Math.abs(x - i));
+    if (i === 0) w = Math.max(w, clamp(1 - Math.abs(x - ORDER.length)));
+    frames[k].style.opacity = w; if (w > best) { best = w; dom = k; }
+  });
+  const swivel = reduce ? 0 : Math.sin(x * Math.PI) * 9;
+  const sc = (.74 + emerge * .30 + turn * .04 + spec * .05 - fin * .04) * (mobile ? .92 : 1);
+  const px = reduce ? 0 : cx * 14, py = reduce ? 0 : cy * 8;
+  obj.style.opacity = emerge;
+  obj.style.filter = emerge < 1 ? "blur(" + ((1 - emerge) * 16).toFixed(1) + "px) brightness(" + (0.6 + emerge * .4).toFixed(2) + ")" : "none";
+  obj.style.transform = "rotateY(" + (swivel + px) + "deg) rotateX(" + ((reduce ? 0 : 5 - turn * 5) - py) + "deg) scale(" + sc + ") translateY(" + ((1 - emerge) * 40) + "px)";
+
+  // metallic sweep: a bright band glides across the brushed steel, masked to the silhouette
+  if (dom !== sheenKey) { sheenKey = dom; const u = "url(" + frames[dom].getAttribute("src") + ")"; sheen.style.webkitMaskImage = u; sheen.style.maskImage = u; }
+  sheen.style.opacity = reduce ? 0 : emerge * (.55 + .3 * Math.sin(p * 40));
+  sheen.style.backgroundPosition = (((p * 5.5) % 1) * 160 - 30) + "% 0";
+
+  // depth: orbit rings, spotlight and glow shift against the product
+  const rs = reduce ? 0 : p * 900;
+  ringA.style.opacity = emerge * .9 * (1 - fin * .4); ringB.style.opacity = emerge * .7 * (1 - fin * .4);
+  ringA.style.transform = "translate(-50%,-50%) rotateX(" + (72 - cy * 10) + "deg) rotateZ(" + rs + "deg)";
+  ringB.style.transform = "translate(-50%,-50%) rotateX(" + (78 + cy * 8) + "deg) rotateZ(" + (-rs * .6) + "deg)";
+  glow.style.opacity = emerge; glow.style.transform = "translate(" + (-cx * 18) + "px," + (-cy * 12) + "px) scale(" + (.9 + emerge * .22 + spec * .1) + ")";
+  beam.style.opacity = emerge * .9;
+
+  // --- chapter 4: spec callouts, hotspots and airflow ---
+  // desktop: callouts overlap in time (they sit in different places); phone: one shared slot, so strictly one at a time
+  const sp = mobile
+    ? [0, 1, 2, 3].map(i => { const a = .69 + i * .055; return [a, a + .012, a + .040, a + .052]; })
+    : [[.70, .72, .75, .78], [.74, .76, .79, .82], [.78, .80, .83, .86], [.82, .84, .87, .89]];
+  specs.forEach((el, i) => {
+    const [a, b, c, d] = sp[i], o = win(p, a, b, c, d);
+    el.style.opacity = o; el.style.transform = "translateY(" + ((1 - o) * 22) + "px)";
+    hs[i].style.opacity = o * (p > .66 ? 1 : 0);
+    if (o > .05 && !counted[i]) { counted[i] = 1; countUp(el); }
+    if (o < .01) counted[i] = 0;
+  });
+  drawAir(reduce ? 0 : win(p, .69, .73, .88, .91));
+
+  // --- chapter 5: three finishes named, the steel unit stays the hero ---
+  const co = win(p, .92, .95, 1.1, 1.2);
+  chip.style.opacity = co; chip.style.transform = "translateX(-50%) translateY(" + ((1 - co) * 14) + "px)";
+  const hi = fin < .34 ? 0 : fin < .67 ? 1 : 2;
+  chipEls.forEach((c, i) => c.classList.toggle("on", i === hi));
+}
+function countUp(el) {
+  el.querySelectorAll("[data-to]").forEach(s => {
+    const to = +s.dataset.to, t0 = performance.now();
+    (function f(t) { const k = clamp((t - t0) / 900); s.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+  });
+}
+function loop() {
+  const t = progress();
+  cur += (t - cur) * (reduce ? 1 : .14);
+  if (Math.abs(t - cur) < .0002) cur = t;
+  cx += (tx - cx) * .06; cy += (ty - cy) * .06;
+  render(cur);
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ---------- reveal on scroll, parallax photo ---------- */
+const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { threshold: .12 });
+document.querySelectorAll(".rv").forEach(el => io.observe(el));
+const phimg = $("phimg"), ph = phimg.parentElement;
+addEventListener("scroll", () => {
+  if (reduce) return;
+  const r = ph.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+  const k = (r.top + r.height / 2 - innerHeight / 2) / innerHeight; phimg.style.transform = "translateY(" + (k * -60) + "px)";
+}, { passive: true });
+
+/* ---------- finish viewer ---------- */
+const sets = { steel: ["steel-front2","steel-q2","steel-side","steel-back"], gold: ["gold-1","gold-4","gold-3","gold-5"], black: ["black-1","black-2","black-6","black-4"] };
+const tints = { steel: "#2a444a", gold: "#3a3017", black: "#10282c" };
+const fview = $("fview"), thumbs = $("thumbs"), pills = $("pills");
+let fset = "steel", fi = 0;
+function showF() {
+  fview.querySelectorAll("img").forEach(i => i.classList.toggle("on", i.dataset.set === fset && +i.dataset.i === fi));
+  fview.style.setProperty("--fg", tints[fset]);
+  pills.querySelectorAll(".pill").forEach(b => b.setAttribute("aria-pressed", b.dataset.set === fset));
+  thumbs.innerHTML = "";
+  sets[fset].forEach((n, i) => { const b = document.createElement("button"); b.className = "thumb"; b.setAttribute("aria-label", ["Front","Three-quarter","Side","Rear"][i] + " view"); b.setAttribute("aria-pressed", i === fi); b.innerHTML = '<img src="assets/' + n + '.webp" alt="">'; b.onclick = () => { fi = i; showF(); }; thumbs.appendChild(b); });
+}
+pills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; fset = b.dataset.set; fi = 0; showF(); });
+showF();
+
+/* ---------- countdown ---------- */
+const target0 = new Date(CONFIG.launch).getTime(), cd = $("cd");
+function tick() {
+  const s = Math.max(0, Math.floor((target0 - Date.now()) / 1000));
+  const v = { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
+  for (const k in v) cd.querySelector('[data-u="' + k + '"]').textContent = String(v[k]).padStart(2, "0");
+}
+tick(); setInterval(tick, 1000);
+
+/* ---------- booking form -> Google Sheet ---------- */
+const f = $("f");
+const rules = {
+  name: v => v.trim().length > 1, company: v => v.trim().length > 1,
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+  phone: v => /^[6-9]\d{9}$/.test(v), city: v => v.trim().length > 1
+};
+function check() {
+  let ok = true;
+  for (const k in rules) { const el = f.elements[k], good = rules[k](el.value); el.closest(".field").classList.toggle("invalid", !good); if (!good) ok = false; }
+  return ok;
+}
+f.elements.phone.addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, ""));
+f.addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("formerr"); err.textContent = ""; err.style.display = "none";
+  if (!check()) return;
+  if (!$("consent").checked) { err.textContent = "Please confirm consent to continue."; err.style.display = "block"; return; }
+  if (f.elements.website.value) return;
+  const btn = f.querySelector("button.submit"); btn.disabled = true;
+  const data = Object.fromEntries(new FormData(f)); delete data.website;
+  const finish = data.finish; delete data.finish;
+  data.notes = (finish ? "Preferred finish: " + finish + ". " : "") + (data.notes || "");
+  Object.assign(data, { phone: "+91" + data.phone, product: "Tornado", source: "tornado-launch-page", submittedAt: new Date().toISOString() });
+  try {
+    if (CONFIG.endpoint) {
+      const r = await fetch(CONFIG.endpoint, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(data) });
+      if (!r.ok) throw new Error("bad status");
+    } else { console.info("Tornado lead (no endpoint configured, not sent):", data); }
+    f.classList.add("done");
+  } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
+});
+</script>
+</body>
+</html>
