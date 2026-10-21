@@ -389,7 +389,9 @@ footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font
 <script>
 const CONFIG = {
   endpoint: "https://script.google.com/macros/s/AKfycbzCEyGxQwCIfPsu7YHaFWmsnP7ClZKx9716XDu4ToMHmgsHgyWj87_gb-4Zv0jM1Iviwg/exec",
-  launch: "2026-11-15T00:00:00+05:30"
+  launch: "2026-11-15T00:00:00+05:30",
+  ga4: "G-L73G1VZ6GR",            // same Google Analytics 4 property as the store; filter by hostname. "" turns it off
+  metaPixel: "943982715717224"    // same Meta pixel as the store. "" turns it off
 };
 const $ = id => document.getElementById(id);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -398,6 +400,35 @@ const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 // 0..1: fade in over [a,b], hold, fade out over [c,d]
 const win = (p, a, b, c, d) => Math.min(seg(p, a, b), 1 - seg(p, c, d));
+
+/* ---------- analytics (loads only when an ID is set) ---------- */
+window.dataLayer = window.dataLayer || [];
+function gtag() { dataLayer.push(arguments); }
+if (CONFIG.ga4) {
+  const g = document.createElement("script"); g.async = true; g.src = "https://www.googletagmanager.com/gtag/js?id=" + CONFIG.ga4; document.head.appendChild(g);
+  gtag("js", new Date()); gtag("config", CONFIG.ga4);
+}
+if (CONFIG.metaPixel) {
+  !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", CONFIG.metaPixel); fbq("track", "PageView");
+}
+function track(name, params, metaEvent) {
+  try { if (CONFIG.ga4) gtag("event", name, params || {}); if (CONFIG.metaPixel && metaEvent) fbq("track", metaEvent, params || {}); } catch (_) { /* tracking must never break the page */ }
+}
+
+/* ---------- where this visitor came from (first touch is remembered) ---------- */
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+function readUtm() {
+  const q = new URLSearchParams(location.search), now = {};
+  UTM_KEYS.forEach(k => { const v = (q.get(k) || "").slice(0, 100); if (v) now[k] = v; });
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem("tornado_utm") || "{}"); if (Object.keys(now).length && !Object.keys(saved).length) localStorage.setItem("tornado_utm", JSON.stringify(now)); } catch (_) { /* storage can be blocked */ }
+  return Object.keys(now).length ? now : saved;
+}
+const UTM = readUtm();
+let referrer = "";
+try { const r = new URL(document.referrer); if (r.hostname && r.hostname !== location.hostname) referrer = (r.hostname + r.pathname).slice(0, 200); } catch (_) { /* no referrer */ }
+const finishesViewed = new Set(["steel"]);
 
 /* ---------- scene refs ---------- */
 const film = $("film"), box = $("box"), obj = $("obj"), glow = $("glow"), beam = $("beam"), grid = $("grid"), bar = $("bar");
@@ -562,7 +593,7 @@ function showF() {
   thumbs.innerHTML = "";
   sets[fset].forEach((n, i) => { const b = document.createElement("button"); b.className = "thumb"; b.setAttribute("aria-label", ["Front","Three-quarter","Side","Rear"][i] + " view"); b.setAttribute("aria-pressed", i === fi); b.innerHTML = '<img src="assets/' + n + '.webp" alt="">'; b.onclick = () => { fi = i; showF(); }; thumbs.appendChild(b); });
 }
-pills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; fset = b.dataset.set; fi = 0; showF(); });
+pills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; fset = b.dataset.set; fi = 0; finishesViewed.add(fset); track("finish_select", { finish: fset }); showF(); });
 showF();
 
 /* ---------- countdown ---------- */
@@ -587,6 +618,8 @@ function check() {
   return ok;
 }
 f.elements.phone.addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, ""));
+let started = false;
+f.addEventListener("focusin", () => { if (!started) { started = true; track("form_start", {}); } });
 f.addEventListener("submit", async e => {
   e.preventDefault();
   const err = $("formerr"); err.textContent = ""; err.style.display = "none";
@@ -597,12 +630,13 @@ f.addEventListener("submit", async e => {
   const data = Object.fromEntries(new FormData(f)); delete data.website;
   const finish = data.finish; delete data.finish;
   data.notes = (finish ? "Preferred finish: " + finish + ". " : "") + (data.notes || "");
-  Object.assign(data, { phone: "+91" + data.phone, product: "Tornado", source: "tornado-launch-page", submittedAt: new Date().toISOString() });
+  Object.assign(data, UTM, { phone: "+91" + data.phone, product: "Tornado", source: "tornado-launch-page", submittedAt: new Date().toISOString(), referrer, finishViewed: [...finishesViewed].join(","), consent: "yes" });
   try {
     if (CONFIG.endpoint) {
       const r = await fetch(CONFIG.endpoint, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(data) });
       if (!r.ok) throw new Error("bad status");
     } else { console.info("Tornado lead (no endpoint configured, not sent):", data); }
+    track("generate_lead", { interest: data.interest, sector: data.sector, finish: finish || "undecided", utm_source: UTM.utm_source || "", utm_content: UTM.utm_content || "" }, "Lead");
     f.classList.add("done");
   } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
 });
