@@ -34,7 +34,7 @@ nav>*{pointer-events:auto}
 .eyebrow{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
 
 /* ===== the film ===== */
-#film{height:480vh;position:relative}
+#film{height:600vh;position:relative}
 #stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--bg)}
 .layer{position:absolute;inset:0;pointer-events:none;will-change:opacity,transform}
 #glow{background:radial-gradient(46% 46% at 50% 56%,rgba(150,205,220,.42),rgba(26,99,114,.18) 45%,transparent 72%);opacity:0}
@@ -168,14 +168,30 @@ button.submit:disabled{opacity:.6;cursor:wait}
 form.done .formbody{display:none}form.done .success{display:block}
 footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font-size:.78rem;color:var(--muted)}
 
-#gl{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;will-change:opacity,filter,transform}
+#gl{position:absolute;left:-35%;top:-35%;width:170%;height:170%;opacity:0;pointer-events:none;will-change:opacity,filter,transform}
 body:not(.gl) #gl,body:not(.gl) #fcanvas{display:none}
 body.gl #obj{display:none}
+/* directed shots: a callout block and a leader line that follows the point on the 3D model */
+#lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;z-index:3}
+#lead path{fill:none;stroke:var(--aqua);stroke-width:1.4;opacity:.75}
+#lead circle{fill:var(--aqua)}
+#lead #lr{fill:none;stroke:var(--aqua);stroke-width:1.4;transform-box:fill-box;transform-origin:center;animation:lping 1.8s infinite}
+@keyframes lping{0%{transform:scale(1);opacity:.8}100%{transform:scale(4);opacity:0}}
+.shot{position:absolute;top:30vh;width:min(390px,38vw);opacity:0;pointer-events:none;z-index:4;will-change:opacity,transform}
+.shot.r{right:max(24px,6vw);text-align:left}.shot.l{left:max(24px,6vw);text-align:left}
+.shot .tagline{margin:0 0 14px;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.shot .n{font-size:clamp(2.8rem,6.6vw,5.6rem);font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.shot .n small{font-size:.3em;font-weight:500;color:var(--muted);margin-left:8px;letter-spacing:.04em}
+.shot h3{margin:12px 0 6px;font-size:1.15rem;font-weight:600}
+.shot p{margin:0;color:var(--muted);font-size:.92rem;max-width:34ch}
+.shot .sub2{display:flex;gap:22px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.shot .sub2 b{display:block;font-size:1.25rem;font-weight:700}.shot .sub2 span{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.shot .tag{display:inline-block;margin-top:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 #fcanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:grab}
 body.gl #fview img{display:none}
 .thumb.view{width:auto;height:44px;padding:0 16px;font:600 .8rem Montserrat,sans-serif;color:var(--aqua)}
 @media(max-width:820px){
-  #film{height:380vh}
+  #film{height:470vh}
   input,select,textarea{font-size:16px}
   .btn,.pill,.thumb{min-height:44px}
   .chip{gap:6px;max-width:calc(100vw - 20px)}
@@ -196,6 +212,12 @@ body.gl #fview img{display:none}
   #s1,#s2{bottom:calc(4vh + 88px)}
   #s3,#s4{bottom:4vh}
   .copy.top{top:13vh}
+  .shot,.shot.l,.shot.r{left:18px;right:18px;width:auto;top:auto;bottom:calc(3vh + 4px)}
+  .shot .tagline{margin-bottom:8px}
+  .shot .n{font-size:clamp(2.2rem,11vw,3.4rem)}
+  .shot h3{margin:8px 0 4px;font-size:1rem}
+  .shot p{font-size:.84rem;max-width:none}
+  .shot .sub2{margin-top:10px;padding-top:10px;gap:18px}.shot .sub2 b{font-size:1.05rem}
   .chip span{padding:8px 10px;font-size:.58rem;letter-spacing:.06em;gap:6px}
   .chip span i{width:9px;height:9px}
   nav .btn{padding:10px 18px}
@@ -288,6 +310,11 @@ body.gl #fview img{display:none}
     <div class="spec l b" id="s3"><div class="n">SS&nbsp;304</div><h3>Stainless steel casing</h3><p>A finish that suits busy washrooms.</p></div>
     <div class="spec r t" id="s4"><div class="n">HEPA</div><h3>Filtered air</h3><p>A HEPA filter sits in the air path.</p></div>
 
+    <svg id="lead" aria-hidden="true"><path id="lp" d=""/><circle id="lr" r="5" cx="0" cy="0"/><circle id="ld" r="4.5" cx="0" cy="0"/></svg>
+    <div class="shot r" id="k1"><p class="tagline">Airflow</p><div class="n"><span data-to="110">0</span><small>m/s</small></div><h3>Air speed</h3><p>Rated air speed at the blades.</p><div class="sub2"><div><b>210 m&sup3;/h</b><span>Blowing volume</span></div><div><b>7&ndash;10 sec</b><span>Hand dry time</span></div></div></div>
+    <div class="shot l" id="k2"><p class="tagline">Motor</p><div class="n"><span data-to="36000">0</span><small>RPM</small></div><h3>Brushless motor</h3><p>700 W motor power. 1,450 W rated power.</p></div>
+    <div class="shot r" id="k3"><p class="tagline">Filtration</p><div class="n">HEPA</div><h3>Filtered air</h3><p>A HEPA filter in the air path.</p><span class="tag">Illustrative filter</span></div>
+    <div class="shot l" id="k4"><p class="tagline">Build</p><div class="n">SS&nbsp;304</div><h3>Stainless steel casing</h3><p>A finish that suits busy washrooms. Also in gold and black.</p></div>
     <div class="chip" id="chip"><span class="on" id="cs"><i style="background:linear-gradient(135deg,#f4f7f8,#8c969a)"></i>Stainless steel</span><span id="cgd"><i style="background:linear-gradient(135deg,#f0d78a,#b8903a)"></i>Gold</span><span id="cbk"><i style="background:linear-gradient(135deg,#3a3d3f,#0a0b0b)"></i>Black</span></div>
     <div class="hint" id="hint">Scroll<br><a class="skip" href="#book">or skip to booking</a></div>
   </div>
@@ -460,14 +487,17 @@ const dW = $("dW"), dH = $("dH"), dC = $("dC"), tW = $("tW"), tH = $("tH"), tC =
 const copy = ["c0","c1","c2","c3","c4","c5"].map($);
 const specs = ["s1","s2","s3","s4"].map($);
 const hs = ["h1","h2","h3","h4"].map($);
+const shots = ["k1","k2","k3","k4"].map($), leadSvg = $("lead"), leadPath = $("lp"), leadDot = $("ld"), leadRing = $("lr");
 const air = $("air"), actx = air.getContext("2d"), chip = $("chip"), hint = $("hint");
 const chipEls = [$("cs"), $("cgd"), $("cbk")];
 let sheenKey = "";
 // 3D model (loaded by scene3d.js). If it can't load, the image version of the film keeps working.
-let GL = null, VIEW = null;
+let GL = null, VIEW = null, DIR = false;   // DIR: the directed shots (needs the internals)
 addEventListener("tornado3d-ready", () => {
   GL = (window.T3D || {}).film || null; VIEW = (window.T3D || {}).viewer || null;
   if (GL || VIEW) document.body.classList.add("gl");
+  DIR = !!(GL && (window.T3D || {}).hasInternals);
+  if (DIR) { const h = copy[4].querySelector("h2"); if (h) h.innerHTML = "Engineered<br>inside out."; }
   const lead = document.querySelector("#finish .lead"); if (VIEW && lead) lead.textContent = "Drag the model to turn it, or pick a view.";
   showF();
 });
@@ -505,11 +535,39 @@ function progress() { const m = film.offsetHeight - innerHeight; return clamp(-f
 
 // The chapter windows below were written for a long film. This maps the short film's progress onto them,
 // giving each chapter only the scroll it needs: hero, sketch, reveal, turn, performance, finish.
-const KEYS = [[0, 0], [.07, .11], [.22, .31], [.32, .48], [.50, .66], [.86, .89], [1, 1]];
+const KEYS = [[0, 0], [.06, .11], [.17, .31], [.25, .48], [.36, .66], [.86, .93], [1, 1]];
 function remap(q) {
   for (let i = 1; i < KEYS.length; i++) if (q <= KEYS[i][0]) { const [a, b] = KEYS[i - 1], [c, d] = KEYS[i]; return b + (d - b) * (q - a) / (c - a); }
   return 1;
 }
+
+/* ---------- directed shots: each keyframe is a camera and a state of the model ---------- */
+const sm = t => t * t * (3 - 2 * t);
+const LP = [e => [.15, .016, .045], e => [.145 + .075 * e.ex, .046, .04], e => [0, .27 + .02 * e.pop, .03 + .17 * e.pop], e => [0, .455, .0712]];   // the point each callout points at
+const KD = { fa: 0, f: [0, .25, .04], zoom: 1, rot: 0, rx: 0, sx: 0, sy: 0, ghost: 0, ex: 0, pop: 0, gm: 0, gf: 0, gb: 0, air: 0 };
+const KF_RAW = [
+  [.66, {}],
+  [.695, { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.55, rx: -.28, sx: -.17, sy: .02, air: 1 }],
+  [.74,  { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.40, rx: -.30, sx: -.17, sy: .02, air: 1 }],
+  [.775, { fa: 1, f: [.15, .045, .04], zoom: 2.3, rot: .45, rx: .12, sx: .17, ghost: 1, gm: 1 }],
+  [.81,  { fa: 1, f: [.2, .045, .04], zoom: 2.2, rot: .30, rx: .14, sx: .17, ghost: 1, gm: 1, ex: 1 }],
+  [.83,  { fa: 1, f: [0, .27, .06], zoom: 1.9, rot: .30, rx: .06, sx: -.17, ghost: 1, gf: .4 }],
+  [.865, { fa: 1, f: [0, .27, .10], zoom: 1.9, rot: .75, rx: .06, sx: -.17, ghost: 1, gf: 1, pop: 1 }],
+  [.885, { fa: 1, f: [0, .43, .04], zoom: 2.3, rot: 0, rx: .02, sx: .17, sy: .09, ghost: 0 }],
+  [.925, { fa: 1, f: [0, .43, .04], zoom: 2.3, rot: -.3, rx: .0, sx: .17, sy: .09, ghost: 0 }],
+  [.945, { fa: 0, f: [0, .43, .04] }]
+];
+const KF = []; { let prev = KD; KF_RAW.forEach(([p, o]) => { const k = Object.assign({}, KD, { f: prev.f }, o); KF.push([p, k]); prev = k; }); }
+function shotAt(p) {
+  if (p <= KF[0][0]) return KF[0][1];
+  for (let i = 1; i < KF.length; i++) if (p <= KF[i][0]) {
+    const [a, A] = KF[i - 1], [b, B] = KF[i], t = sm(clamp((p - a) / (b - a))), o = {};
+    for (const k in A) o[k] = k === "f" ? A.f.map((v, j) => v + (B.f[j] - v) * t) : A[k] + (B[k] - A[k]) * t;
+    return o;
+  }
+  return KF[KF.length - 1][1];
+}
+const SHOT_WIN = [[.68, .695, .74, .76], [.76, .775, .805, .82], [.82, .835, .862, .88], [.88, .89, .925, .94]];
 
 function render(p) {
   p = remap(p);
@@ -517,9 +575,10 @@ function render(p) {
   bar.style.transform = "scaleX(" + clamp(scrollY / (document.documentElement.scrollHeight - innerHeight)) + ")";
 
   // --- copy windows ---
-  const W = [[1, .12, .16, .27, .31], [2, .34, .38, .44, .48], [3, .50, .54, .62, .66], [4, .68, .71, .86, .89], [5, .92, .95, 1.1, 1.2]];
+  const W = [[1, .12, .16, .27, .31], [2, .34, .38, .44, .48], [3, .50, .54, .62, .66], [4, .68, .71, .86, .89], [5, .93, .95, 1.1, 1.2]];
   copy[0].style.opacity = 1 - seg(p, .07, .11);
   copy[0].style.transform = "translateY(calc(-50% - " + (seg(p, .0, .11) * 30) + "px))";
+  if (DIR) W[3] = [4, .60, .63, .665, .69];   // the directed shots carry their own titles
   W.forEach(([i, a, b, c, d]) => {
     const o = win(p, a, b, c, d);
     copy[i].style.opacity = o; copy[i].style.transform = "translateY(" + ((1 - o) * 26) + "px)";
@@ -541,20 +600,25 @@ function render(p) {
   const emerge = ease(seg(p, .30, .41));
   const turn = seg(p, .46, .66);
   const spec = seg(p, .68, .90);
-  const fin = seg(p, .91, .99);
+  const fin = seg(p, .935, .995);
 
   const px = reduce ? 0 : cx * 14, py = reduce ? 0 : cy * 8;
   let dom = "front";
   if (GL) {
     // the real model: a full turn on scroll, a gentle tilt, and the finish changes live (steel, gold, black)
     const finV = fin < .25 ? 0 : fin < .42 ? ease((fin - .25) / .17) : fin < .62 ? 1 : fin < .8 ? 1 + ease((fin - .62) / .18) : 2;
-    GL.update({ rotY: ease(turn) * Math.PI * 2 + (reduce ? 0 : cx * .35), rotX: reduce ? 0 : (.10 - turn * .10) + cy * .12, scale: .86 + emerge * .14 + spec * .06 - fin * .03, finish: finV });
+    const k = DIR ? shotAt(p) : KD, fa = k.fa, free = 1 - fa;
+    GL.update({ rotY: ease(turn) * Math.PI * 2 + k.rot + (reduce ? 0 : cx * .35 * free), rotX: (reduce ? 0 : (.10 - turn * .10) + cy * .12 * free) + k.rx,
+      scale: .86 + emerge * .14 + (DIR ? 0 : spec * .06) - fin * .03, finish: finV,
+      focus: k.f, focusAmt: fa, zoom: mobile ? k.zoom : 1 + (k.zoom - 1) * .6, shiftX: mobile ? 0 : k.sx * 1.1, shiftY: mobile ? k.sy + .11 * fa : k.sy,
+      ghost: k.ghost, explode: k.ex, pop: k.pop, glowMotor: k.gm, glowFilter: k.gf, glowBoard: k.gb, air: reduce ? 0 : k.air });
     const cv = GL.canvas;
     cv.style.opacity = emerge;
     cv.style.filter = emerge < 1 ? "blur(" + ((1 - emerge) * 16).toFixed(1) + "px)" : "none";
     cv.style.transform = "translateY(" + ((1 - emerge) * 40) + "px)";
     const fr = film.getBoundingClientRect();
     if (emerge > .001 && fr.bottom > 0 && fr.top < innerHeight) GL.render();
+    if (DIR) directShots(p, k, mobile);
   } else {
   // frame weights: front -> three-quarters -> side -> back -> front
   const x = turn * ORDER.length;
@@ -591,24 +655,43 @@ function render(p) {
     ? [0, 1, 2, 3].map(() => [.70, .73, .86, .89])
     : [[.70, .72, .75, .78], [.74, .76, .79, .82], [.78, .80, .83, .86], [.82, .84, .87, .89]];
   specs.forEach((el, i) => {
-    const [a, b, c, d] = sp[i], o = win(p, a, b, c, d);
+    const [a, b, c, d] = sp[i], o = DIR ? 0 : win(p, a, b, c, d);
     el.style.opacity = o; el.style.transform = "translateY(" + ((1 - o) * 22) + "px)";
-    hs[i].style.opacity = o * (p > .66 ? 1 : 0);
+    hs[i].style.opacity = DIR ? 0 : o * (p > .66 ? 1 : 0);
     if (o > .05 && !counted[i]) { counted[i] = 1; countUp(el); }
     if (o < .01) counted[i] = 0;
   });
-  drawAir(reduce ? 0 : win(p, .69, .73, .88, .91));
+  drawAir(reduce || DIR ? 0 : win(p, .69, .73, .88, .91));
 
   // --- chapter 5: three finishes named, the steel unit stays the hero ---
-  const co = win(p, .92, .95, 1.1, 1.2);
+  const co = win(p, .94, .96, 1.1, 1.2);
   chip.style.opacity = co; chip.style.transform = "translateX(-50%) translateY(" + ((1 - co) * 14) + "px)";
   const hi = fin < .34 ? 0 : fin < .67 ? 1 : 2;   // same thresholds as the live finish
   chipEls.forEach((c, i) => c.classList.toggle("on", i === hi));
 }
+// callout blocks, and a leader line from the point on the model to the block
+function directShots(p, k, mobile) {
+  let best = 0, bi = -1;
+  shots.forEach((el, i) => {
+    const o = win(p, ...SHOT_WIN[i]);
+    el.style.opacity = o; el.style.transform = "translateY(" + ((1 - o) * 22) + "px)";
+    if (o > .05 && !counted["k" + i]) { counted["k" + i] = 1; countUp(el); }
+    if (o < .01) counted["k" + i] = 0;
+    if (o > best) { best = o; bi = i; }
+  });
+  leadSvg.style.opacity = bi < 0 ? 0 : best;
+  if (bi < 0) return;
+  const pt = GL.project(LP[bi](k)), r = shots[bi].getBoundingClientRect();
+  let ax, ay, d;
+  if (mobile) { ax = pt.x; ay = pt.y; d = ""; }   // on a phone the pulsing point is enough
+  else { const right = shots[bi].classList.contains("r"); ax = right ? r.left - 18 : r.right + 18; ay = r.top + 38; const mx = pt.x + (ax - pt.x) * .55; d = "M" + pt.x + " " + pt.y + "L" + mx + " " + ay + "L" + ax + " " + ay; }
+  leadPath.setAttribute("d", d);
+  [leadDot, leadRing].forEach(c => { c.setAttribute("cx", pt.x); c.setAttribute("cy", pt.y); });
+}
 function countUp(el) {
   el.querySelectorAll("[data-to]").forEach(s => {
     const to = +s.dataset.to, t0 = performance.now();
-    (function f(t) { const k = clamp((t - t0) / 900); s.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); })(t0);
+    (function f(t) { const k = clamp((t - t0) / 900); s.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString("en-IN"); if (k < 1) requestAnimationFrame(f); })(t0);
   });
 }
 function loop() {
