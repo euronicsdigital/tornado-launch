@@ -168,6 +168,12 @@ button.submit:disabled{opacity:.6;cursor:wait}
 form.done .formbody{display:none}form.done .success{display:block}
 footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font-size:.78rem;color:var(--muted)}
 
+#gl{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none;will-change:opacity,filter,transform}
+body:not(.gl) #gl,body:not(.gl) #fcanvas{display:none}
+body.gl #obj{display:none}
+#fcanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+body.gl #fview img{display:none}
+.thumb.view{width:auto;height:44px;padding:0 16px;font:600 .8rem Montserrat,sans-serif;color:var(--aqua)}
 @media(max-width:820px){
   #film{height:380vh}
   input,select,textarea{font-size:16px}
@@ -199,6 +205,7 @@ footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font
   .rv{opacity:1;transform:none;transition:none}.hint::after,.hs{animation:none}
 }
 </style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
 </head>
 <body>
 <div id="bar"></div>
@@ -216,6 +223,7 @@ footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font
 
     <div id="box">
       <div id="orbit"><div class="ring" id="ringB"></div><div class="ring" id="ringA"></div></div>
+      <canvas id="gl" aria-hidden="true"></canvas>
       <div id="rig"><div id="obj">
         <img src="assets/steel-front2.webp" alt="Euronics Tornado stainless steel hand dryer, front view" data-f="front">
         <img src="assets/steel-q2.webp" alt="" data-f="q2" decoding="async">
@@ -301,6 +309,7 @@ footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font
 <section class="s" id="finish">
   <div class="finish">
     <div id="fview" class="rv" role="img" aria-label="Tornado in the selected finish and angle">
+      <canvas id="fcanvas" aria-label="Interactive 3D model of Tornado. Drag to turn it."></canvas>
       <img src="assets/steel-front2.webp" alt="" class="on" data-set="steel" data-i="0">
       <img src="assets/steel-q2.webp" alt="" data-set="steel" data-i="1" loading="lazy">
       <img src="assets/steel-side.webp" alt="" data-set="steel" data-i="2" loading="lazy">
@@ -454,6 +463,14 @@ const hs = ["h1","h2","h3","h4"].map($);
 const air = $("air"), actx = air.getContext("2d"), chip = $("chip"), hint = $("hint");
 const chipEls = [$("cs"), $("cgd"), $("cbk")];
 let sheenKey = "";
+// 3D model (loaded by scene3d.js). If it can't load, the image version of the film keeps working.
+let GL = null, VIEW = null;
+addEventListener("tornado3d-ready", () => {
+  GL = (window.T3D || {}).film || null; VIEW = (window.T3D || {}).viewer || null;
+  if (GL || VIEW) document.body.classList.add("gl");
+  const lead = document.querySelector("#finish .lead"); if (VIEW && lead) lead.textContent = "Drag the model to turn it, or pick a view.";
+  showF();
+});
 
 /* ---------- airflow particles (blade exits, in the 1600px source space) ---------- */
 let AW = 0, parts = [];
@@ -526,9 +543,22 @@ function render(p) {
   const spec = seg(p, .68, .90);
   const fin = seg(p, .91, .99);
 
+  const px = reduce ? 0 : cx * 14, py = reduce ? 0 : cy * 8;
+  let dom = "front";
+  if (GL) {
+    // the real model: a full turn on scroll, a gentle tilt, and the finish changes live (steel, gold, black)
+    const finV = fin < .25 ? 0 : fin < .42 ? ease((fin - .25) / .17) : fin < .62 ? 1 : fin < .8 ? 1 + ease((fin - .62) / .18) : 2;
+    GL.update({ rotY: ease(turn) * Math.PI * 2 + (reduce ? 0 : cx * .35), rotX: reduce ? 0 : (.10 - turn * .10) + cy * .12, scale: .86 + emerge * .14 + spec * .06 - fin * .03, finish: finV });
+    const cv = GL.canvas;
+    cv.style.opacity = emerge;
+    cv.style.filter = emerge < 1 ? "blur(" + ((1 - emerge) * 16).toFixed(1) + "px)" : "none";
+    cv.style.transform = "translateY(" + ((1 - emerge) * 40) + "px)";
+    const fr = film.getBoundingClientRect();
+    if (emerge > .001 && fr.bottom > 0 && fr.top < innerHeight) GL.render();
+  } else {
   // frame weights: front -> three-quarters -> side -> back -> front
   const x = turn * ORDER.length;
-  let dom = "front", best = -1;
+  let best = -1;
   ORDER.forEach((k, i) => {
     let w = clamp(1 - Math.abs(x - i));
     if (i === 0) w = Math.max(w, clamp(1 - Math.abs(x - ORDER.length)));
@@ -536,7 +566,6 @@ function render(p) {
   });
   const swivel = reduce ? 0 : Math.sin(x * Math.PI) * 9;
   const sc = (.74 + emerge * .30 + turn * .04 + spec * .05 - fin * .04) * (mobile ? .92 : 1);
-  const px = reduce ? 0 : cx * 14, py = reduce ? 0 : cy * 8;
   obj.style.opacity = emerge;
   obj.style.filter = emerge < 1 ? "blur(" + ((1 - emerge) * 16).toFixed(1) + "px) brightness(" + (0.6 + emerge * .4).toFixed(2) + ")" : "none";
   obj.style.transform = "rotateY(" + (swivel + px) + "deg) rotateX(" + ((reduce ? 0 : 5 - turn * 5) - py) + "deg) scale(" + sc + ") translateY(" + ((1 - emerge) * 40) + "px)";
@@ -545,6 +574,8 @@ function render(p) {
   if (dom !== sheenKey) { sheenKey = dom; const u = "url(" + frames[dom].getAttribute("src") + ")"; sheen.style.webkitMaskImage = u; sheen.style.maskImage = u; }
   sheen.style.opacity = reduce ? 0 : emerge * (.55 + .3 * Math.sin(p * 40));
   sheen.style.backgroundPosition = (((p * 5.5) % 1) * 160 - 30) + "% 0";
+
+  }
 
   // depth: orbit rings, spotlight and glow shift against the product
   const rs = reduce ? 0 : p * 900;
@@ -571,7 +602,7 @@ function render(p) {
   // --- chapter 5: three finishes named, the steel unit stays the hero ---
   const co = win(p, .92, .95, 1.1, 1.2);
   chip.style.opacity = co; chip.style.transform = "translateX(-50%) translateY(" + ((1 - co) * 14) + "px)";
-  const hi = fin < .34 ? 0 : fin < .67 ? 1 : 2;
+  const hi = fin < .34 ? 0 : fin < .67 ? 1 : 2;   // same thresholds as the live finish
   chipEls.forEach((c, i) => c.classList.toggle("on", i === hi));
 }
 function countUp(el) {
@@ -602,7 +633,7 @@ addEventListener("scroll", () => {
 
 /* ---------- finish viewer ---------- */
 const sets = { steel: ["steel-front2","steel-q2","steel-side","steel-back"], gold: ["gold-1","gold-4","gold-3","gold-5"], black: ["black-1","black-2","black-6","black-4"] };
-const tints = { steel: "#2a444a", gold: "#3a3017", black: "#10282c" };
+const tints = { steel: "#2a444a", gold: "#3a3017", black: "#1d3c43" };
 const fview = $("fview"), thumbs = $("thumbs"), pills = $("pills");
 let fset = "steel", fi = 0;
 function showF() {
@@ -610,6 +641,11 @@ function showF() {
   fview.style.setProperty("--fg", tints[fset]);
   pills.querySelectorAll(".pill").forEach(b => b.setAttribute("aria-pressed", b.dataset.set === fset));
   thumbs.innerHTML = "";
+  if (VIEW) {
+    VIEW.setFinish({ steel: 0, gold: 1, black: 2 }[fset]);
+    [["Front", 0], ["Three-quarter", .75], ["Side", Math.PI / 2], ["Rear", Math.PI]].forEach(([label, a]) => { const b = document.createElement("button"); b.className = "thumb view"; b.textContent = label; b.onclick = () => VIEW.setYaw(a); thumbs.appendChild(b); });
+    return;
+  }
   sets[fset].forEach((n, i) => { const b = document.createElement("button"); b.className = "thumb"; b.setAttribute("aria-label", ["Front","Three-quarter","Side","Rear"][i] + " view"); b.setAttribute("aria-pressed", i === fi); b.innerHTML = '<img src="assets/' + n + '.webp" alt="">'; b.onclick = () => { fi = i; showF(); }; thumbs.appendChild(b); });
 }
 pills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; fset = b.dataset.set; fi = 0; finishesViewed.add(fset); track("finish_select", { finish: fset }); showF(); });
@@ -660,5 +696,6 @@ f.addEventListener("submit", async e => {
   } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
 });
 </script>
+<script type="module" src="scene3d.js"></script>
 </body>
 </html>
