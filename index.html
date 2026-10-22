@@ -28,7 +28,7 @@ img{display:block}
 nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16px max(16px,4vw);background:linear-gradient(#040b0ccc,transparent);pointer-events:none}
 nav>*{pointer-events:auto}
 .logo img{height:24px;width:auto}
-.btn{display:inline-block;padding:11px 22px;border-radius:999px;background:var(--aqua);color:var(--ink);font:600 .86rem Montserrat,sans-serif;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 22px;line-height:1;border-radius:999px;background:var(--aqua);color:var(--ink);font:600 .86rem/1 Montserrat,sans-serif;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
 .btn:hover{background:#fff;transform:translateY(-1px)}
 #bar{position:fixed;top:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,var(--teal),var(--aqua));transform-origin:left;transform:scaleX(0);z-index:40}
 .eyebrow{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
@@ -220,7 +220,7 @@ body.gl #fview img{display:none}
   .shot .sub2{margin-top:10px;padding-top:10px;gap:18px}.shot .sub2 b{font-size:1.05rem}
   .chip span{padding:8px 10px;font-size:.58rem;letter-spacing:.06em;gap:6px}
   .chip span i{width:9px;height:9px}
-  nav .btn{padding:10px 18px}
+  nav .btn{padding:0 18px}
   section.s{padding:52px 18px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -312,7 +312,7 @@ body.gl #fview img{display:none}
 
     <svg id="lead" aria-hidden="true"><path id="lp" d=""/><circle id="lr" r="5" cx="0" cy="0"/><circle id="ld" r="4.5" cx="0" cy="0"/></svg>
     <div class="shot r" id="k1"><p class="tagline">Airflow</p><div class="n"><span data-to="110">0</span><small>m/s</small></div><h3>Air speed</h3><p>Rated air speed at the blades.</p><div class="sub2"><div><b>210 m&sup3;/h</b><span>Blowing volume</span></div><div><b>7&ndash;10 sec</b><span>Hand dry time</span></div></div></div>
-    <div class="shot l" id="k2"><p class="tagline">Motor</p><div class="n"><span data-to="36000">0</span><small>RPM</small></div><h3>Brushless motor</h3><p>700 W motor power. 1,450 W rated power.</p></div>
+    <div class="shot l" id="k2"><p class="tagline">Motor</p><div class="n"><span data-to="36000">0</span><small>RPM</small></div><h3>Brushless motor</h3><p>700 W motor power. 1,450 W rated power.</p><span class="tag">Illustrative motor</span></div>
     <div class="shot r" id="k3"><p class="tagline">Filtration</p><div class="n">HEPA</div><h3>Filtered air</h3><p>A HEPA filter in the air path.</p><span class="tag">Illustrative filter</span></div>
     <div class="shot l" id="k4"><p class="tagline">Build</p><div class="n">SS&nbsp;304</div><h3>Stainless steel casing</h3><p>A finish that suits busy washrooms. Also in gold and black.</p></div>
     <div class="chip" id="chip"><span class="on" id="cs"><i style="background:linear-gradient(135deg,#f4f7f8,#8c969a)"></i>Stainless steel</span><span id="cgd"><i style="background:linear-gradient(135deg,#f0d78a,#b8903a)"></i>Gold</span><span id="cbk"><i style="background:linear-gradient(135deg,#3a3d3f,#0a0b0b)"></i>Black</span></div>
@@ -543,15 +543,15 @@ function remap(q) {
 
 /* ---------- directed shots: each keyframe is a camera and a state of the model ---------- */
 const sm = t => t * t * (3 - 2 * t);
-const LP = [e => [.15, .016, .045], e => [.145 + .075 * e.ex, .046, .04], e => [0, .27 + .02 * e.pop, .03 + .17 * e.pop], e => [0, .455, .0712]];   // the point each callout points at
-const KD = { fa: 0, f: [0, .25, .04], zoom: 1, rot: 0, rx: 0, sx: 0, sy: 0, ghost: 0, ex: 0, pop: 0, gm: 0, gf: 0, gb: 0, air: 0 };
+const LP = [e => [.15, .016, .045], e => [0, .16, .03], e => [0, .27 + .02 * e.pop, .03 + .17 * e.pop], e => [0, .455, .0712]];   // the point each callout points at
+const KD = { motor: 0, fa: 0, f: [0, .25, .04], zoom: 1, rot: 0, rx: 0, sx: 0, sy: 0, ghost: 0, ex: 0, pop: 0, gm: 0, gf: 0, gb: 0, air: 0 };
 const KF_RAW = [
   [.66, {}],
-  [.695, { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.55, rx: -.28, sx: -.17, sy: .02, air: 1 }],
-  [.74,  { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.40, rx: -.30, sx: -.17, sy: .02, air: 1 }],
-  [.775, { fa: 1, f: [.15, .045, .04], zoom: 2.3, rot: .45, rx: .12, sx: .17, ghost: 1, gm: 1 }],
-  [.81,  { fa: 1, f: [.2, .045, .04], zoom: 2.2, rot: .30, rx: .14, sx: .17, ghost: 1, gm: 1, ex: 1 }],
-  [.83,  { fa: 1, f: [0, .27, .06], zoom: 1.9, rot: .30, rx: .06, sx: -.17, ghost: 1, gf: .4 }],
+  [.695, { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.55, rx: -.28, sx: -.17, sy: .02, air: 1, ghost: .55 }],
+  [.74,  { fa: 1, f: [.15, .03, .045], zoom: 2.6, rot: -.40, rx: -.30, sx: -.17, sy: .02, air: 1, ghost: .55 }],
+  [.775, { fa: 1, f: [0, .16, .03], zoom: 2.2, rot: .5, rx: .14, sx: .17, ghost: 1, gm: .5, motor: .3 }],
+  [.81,  { fa: 1, f: [0, .16, .03], zoom: 2.2, rot: .1, rx: .16, sx: .17, ghost: 1, gm: 1, motor: 1 }],
+  [.83,  { fa: 1, f: [0, .27, .06], zoom: 1.9, rot: .30, rx: .06, sx: -.17, ghost: 1, gf: .4, motor: 0 }],
   [.865, { fa: 1, f: [0, .27, .10], zoom: 1.9, rot: .75, rx: .06, sx: -.17, ghost: 1, gf: 1, pop: 1 }],
   [.885, { fa: 1, f: [0, .43, .04], zoom: 2.3, rot: 0, rx: .02, sx: .17, sy: .09, ghost: 0 }],
   [.925, { fa: 1, f: [0, .43, .04], zoom: 2.3, rot: -.3, rx: .0, sx: .17, sy: .09, ghost: 0 }],
@@ -611,7 +611,7 @@ function render(p) {
     GL.update({ rotY: ease(turn) * Math.PI * 2 + k.rot + (reduce ? 0 : cx * .35 * free), rotX: (reduce ? 0 : (.10 - turn * .10) + cy * .12 * free) + k.rx,
       scale: .86 + emerge * .14 + (DIR ? 0 : spec * .06) - fin * .03, finish: finV,
       focus: k.f, focusAmt: fa, zoom: mobile ? k.zoom : 1 + (k.zoom - 1) * .6, shiftX: mobile ? 0 : k.sx * 1.1, shiftY: mobile ? k.sy + .11 * fa : k.sy,
-      ghost: k.ghost, explode: k.ex, pop: k.pop, glowMotor: k.gm, glowFilter: k.gf, glowBoard: k.gb, air: reduce ? 0 : k.air });
+      ghost: k.ghost, explode: k.ex, motor: k.motor, spin: performance.now() * (reduce ? 0 : .02) * (.4 + k.motor), pop: k.pop, glowMotor: k.gm, glowFilter: k.gf, glowBoard: k.gb, air: reduce ? 0 : k.air });
     const cv = GL.canvas;
     cv.style.opacity = emerge;
     cv.style.filter = emerge < 1 ? "blur(" + ((1 - emerge) * 16).toFixed(1) + "px)" : "none";
@@ -779,6 +779,6 @@ f.addEventListener("submit", async e => {
   } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
 });
 </script>
-<script type="module" src="scene3d.js"></script>
+<script type="module" src="scene3d.js?v=1792666296"></script>
 </body>
 </html>

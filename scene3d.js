@@ -56,6 +56,19 @@ function makeFilter() {
 }
 const FILTER_HOME = [0, 0.27, 0.03];
 
+// The motor is an illustration too: the engineering model has no motor in the stem (only the nozzle ducts, plates and a board).
+const MOTOR_HOME = [0, 0.15, 0.02];
+function makeMotor(mat) {
+  const g = new THREE.Group(), spin = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.030, 0.030, 0.072, 40), mat));
+  for (let i = 0; i < 24; i++) { const a = i / 24 * Math.PI * 2, f = new THREE.Mesh(new THREE.BoxGeometry(0.0035, 0.07, 0.009), mat); f.position.set(Math.cos(a) * 0.0335, 0, Math.sin(a) * 0.0335); f.rotation.y = -a; g.add(f); }
+  [-0.038, 0.038].forEach(y => { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.036, 0.007, 40), mat); c.position.y = y; g.add(c); });
+  spin.position.y = 0.052; spin.add(new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.02, 12), mat));
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.046, 0.046, 0.003, 48), mat); disc.position.y = -0.006; spin.add(disc);
+  for (let i = 0; i < 16; i++) { const a = i / 16 * Math.PI * 2, b = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.016, 0.0018), mat); b.position.set(Math.cos(a) * 0.032, 0.003, Math.sin(a) * 0.032); b.rotation.set(0, -a + 0.5, 0.35); spin.add(b); }
+  g.add(spin); g.userData.spin = spin; return g;
+}
+
 // Air streaks leaving the two blades, drawn as fading lines in the model's own space.
 function makeAir() {
   const N = 520, pos = new Float32Array(N * 6), col = new Float32Array(N * 8), st = [];
@@ -103,8 +116,9 @@ function makeInstance(gltf, logoTex, intGltf) {
     parts.traverse(o => { if (!o.isMesh) return; o.material = o.name === 'board' ? board : motor; if (o.name === 'motorR') inst.mR = o; if (o.name === 'motorL') inst.mL = o; });
     parts.visible = false; parts.position.y = 0; inner.add(parts);
     const filter = makeFilter(); filter.position.set(...FILTER_HOME); filter.visible = false; inner.add(filter);
+    const motorIll = makeMotor(motor); motorIll.position.set(...MOTOR_HOME); motorIll.visible = false; inner.add(motorIll);
     const air = makeAir(); inner.add(air.lines);
-    Object.assign(inst, { parts, motor, board, filter, air });
+    Object.assign(inst, { parts, motor, board, filter, air, motorIll });
   }
   inst.set = s => {
     pivot.rotation.set(s.rotX || 0, s.rotY || 0, 0); pivot.scale.setScalar(s.scale || 1); applyFinish(mats, s.finish || 0);
@@ -114,6 +128,7 @@ function makeInstance(gltf, logoTex, intGltf) {
       if (inst.mR) inst.mR.position.x = ex * 0.075; if (inst.mL) inst.mL.position.x = -ex * 0.075;
       const pop = s.pop || 0; inst.filter.visible = pop > 0.01 && g > 0.02;
       inst.filter.position.set(FILTER_HOME[0], FILTER_HOME[1] + pop * 0.02, FILTER_HOME[2] + pop * 0.17); inst.filter.rotation.set(pop * 0.25, pop * 0.9, 0);
+      const mo = s.motor || 0; inst.motorIll.visible = mo > 0.01 && g > 0.02; inst.motorIll.position.y = MOTOR_HOME[1] + (1 - mo) * -0.02; inst.motorIll.userData.spin.rotation.y = (s.spin || 0);
       inst.motor.emissiveIntensity = (s.glowMotor || 0) * 0.28; inst.board.emissiveIntensity = (s.glowBoard || 0) * 0.3; inst.filter.material.emissiveIntensity = (s.glowFilter || 0) * 0.14;
     }
   };
