@@ -163,15 +163,15 @@ function createFilm(canvas, box, gltf, logoTex, intGltf) {
 function createViewer(canvas, gltf, logoTex, reduce) {
   const host = canvas.parentElement, renderer = makeRenderer(canvas), scene = new THREE.Scene(); scene.environment = makeEnv(renderer);
   const cam = new THREE.PerspectiveCamera(24, 1, 0.05, 10), inst = makeInstance(gltf, logoTex, null); scene.add(inst.root);
-  let yaw = 0.5, target = null, vel = 0, down = false, lastX = 0, idle = 0, finish = 0, finishTarget = 0, visible = false, raf = 0, last = 0;
+  let yaw = 0.5, pitch = 0.12, vpitch = 0, target = null, vel = 0, down = false, lastX = 0, lastY = 0, idle = 0, finish = 0, finishTarget = 0, visible = false, raf = 0, last = 0;
   function resize() {
     const w = Math.max(2, host.clientWidth), h = Math.max(2, host.clientHeight); renderer.setPixelRatio(dprFor(w)); renderer.setSize(w, h, false);
     const fitH = 0.62, d = Math.max(fitH / 2 / Math.tan(cam.fov * Math.PI / 360), (0.60 / 2) / (Math.tan(cam.fov * Math.PI / 360) * (w / h)));
     cam.aspect = w / h; cam.position.set(0, CENTER_Y, d); cam.lookAt(0, CENTER_Y, 0); cam.updateProjectionMatrix();
   }
   resize(); new ResizeObserver(resize).observe(host);
-  canvas.addEventListener('pointerdown', e => { down = true; lastX = e.clientX; vel = 0; target = null; idle = 0; canvas.setPointerCapture(e.pointerId); canvas.style.cursor = 'grabbing'; });
-  canvas.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - lastX; lastX = e.clientX; yaw += dx * 0.011; vel = dx * 0.011; idle = 0; });
+  canvas.addEventListener('pointerdown', e => { down = true; lastX = e.clientX; vel = 0; vpitch = 0; target = null; idle = 0; lastY = e.clientY; canvas.setPointerCapture(e.pointerId); canvas.style.cursor = 'grabbing'; });
+  canvas.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - lastX, dy = e.clientY - lastY; lastX = e.clientX; lastY = e.clientY; yaw += dx * 0.011; vel = dx * 0.011; pitch = clamp(pitch + dy * 0.009, -1.25, 1.25); idle = 0; });
   const up = () => { down = false; canvas.style.cursor = 'grab'; };
   canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
   function frame(t) {
@@ -181,13 +181,13 @@ function createViewer(canvas, gltf, logoTex, reduce) {
       else { yaw += vel; vel *= 0.94; idle += dt; if (!reduce && idle > 2.5) yaw += dt * 0.35; }
     }
     finish += (finishTarget - finish) * Math.min(1, dt * 6);
-    inst.set({ rotY: yaw, finish, scale: 1 }); renderer.render(scene, cam); raf = requestAnimationFrame(frame);
+    inst.set({ rotY: yaw, rotX: pitch, finish, scale: 1 }); renderer.render(scene, cam); raf = requestAnimationFrame(frame);
   }
   new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && !raf) { last = performance.now(); raf = requestAnimationFrame(frame); } }, { threshold: 0.05 }).observe(host);
   return {
     setFinish(i) { finishTarget = clamp(i, 0, 2); },
     setYaw(a) { target = a; idle = 0; vel = 0; },
-    render() { inst.set({ rotY: yaw, finish, scale: 1 }); renderer.render(scene, cam); },
+    render() { inst.set({ rotY: yaw, rotX: pitch, finish, scale: 1 }); renderer.render(scene, cam); },
     canvas
   };
 }
