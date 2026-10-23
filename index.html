@@ -34,7 +34,7 @@ nav>*{pointer-events:auto}
 .eyebrow{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
 
 /* ===== the film ===== */
-#film{height:600vh;position:relative}
+#film{height:760vh;position:relative}
 #stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--bg)}
 .layer{position:absolute;inset:0;pointer-events:none;will-change:opacity,transform}
 #glow{background:radial-gradient(46% 46% at 50% 56%,rgba(150,205,220,.42),rgba(26,99,114,.18) 45%,transparent 72%);opacity:0}
@@ -191,7 +191,7 @@ body.gl #obj{display:none}
 body.gl #fview img{display:none}
 .thumb.view{width:auto;height:44px;padding:0 16px;font:600 .8rem Montserrat,sans-serif;color:var(--aqua)}
 @media(max-width:820px){
-  #film{height:470vh}
+  #film{height:580vh}
   input,select,textarea{font-size:16px}
   .btn,.pill,.thumb{min-height:44px}
   .chip{gap:6px;max-width:calc(100vw - 20px)}
@@ -696,7 +696,7 @@ function countUp(el) {
 }
 function loop() {
   const t = progress();
-  cur += (t - cur) * (reduce ? 1 : .22);
+  cur += (t - cur) * (reduce ? 1 : .13);
   if (Math.abs(t - cur) < .0002) cur = t;
   cx += (tx - cx) * .06; cy += (ty - cy) * .06;
   render(cur);
@@ -779,6 +779,6 @@ f.addEventListener("submit", async e => {
   } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
 });
 </script>
-<script type="module" src="scene3d.js?v=1792666296"></script>
+<script type="module" src="scene3d.js?v=1792754345"></script>
 </body>
 </html>
