@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><base target="_top">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tornado | Coming 15 November 2026 | Euronics</title>
+<meta name="description" content="Tornado, the next generation of hand drying from Euronics, launches on 15 November 2026. Available in stainless steel, gold and black. Start your booking now.">
+<meta property="og:title" content="Tornado. Coming 15 November 2026.">
+<meta property="og:description" content="The next generation of hand drying. Start your booking now.">
+<meta property="og:image" content="https://euronicsdigital.github.io/tornado-launch/assets/steel-1.webp">
+<meta property="og:type" content="website">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#1A6372; --teal-d:#0e3a44; --aqua:#EAFFFE; --ink:#111212; --bg:#040b0c;
+  --muted:#8fb0b3; --line:rgba(234,255,254,.16); --err:#ff8a80;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto;max-width:100%;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom}
+body{margin:0;max-width:100%;overscroll-behavior-x:none;touch-action:pan-y pinch-zoom;background:var(--bg);color:var(--aqua);font-family:Montserrat,system-ui,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{display:block}
+
+/* chrome */
+nav{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16px max(16px,4vw);background:linear-gradient(#040b0ccc,transparent);pointer-events:none}
+nav>*{pointer-events:auto}
+.logo img{height:24px;width:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 22px;line-height:1;border-radius:999px;background:var(--aqua);color:var(--ink);font:600 .86rem/1 Montserrat,sans-serif;text-decoration:none;border:0;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{background:#fff;transform:translateY(-1px)}
+#bar{position:fixed;top:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,var(--teal),var(--aqua));transform-origin:left;transform:scaleX(0);z-index:40}
+.eyebrow{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+
+/* ===== the film ===== */
+#film{height:760vh;position:relative}
+#stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--bg)}
+.layer{position:absolute;inset:0;pointer-events:none;will-change:opacity,transform}
+#glow{background:radial-gradient(46% 46% at 50% 56%,rgba(150,205,220,.42),rgba(26,99,114,.18) 45%,transparent 72%);opacity:0}
+#beam{background:conic-gradient(from 180deg at 50% -8%,transparent 160deg,rgba(234,255,254,.10) 176deg,rgba(234,255,254,.16) 180deg,rgba(234,255,254,.10) 184deg,transparent 200deg);opacity:0;mix-blend-mode:screen}
+#grid{opacity:0;background-image:linear-gradient(rgba(234,255,254,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(234,255,254,.07) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(60% 55% at 50% 52%,#000,transparent 80%);-webkit-mask-image:radial-gradient(60% 55% at 50% 52%,#000,transparent 80%)}
+#vig{background:radial-gradient(130% 100% at 50% 50%,transparent 62%,#000 100%);opacity:.55}
+/* square drawing box: everything product-related lives in it so overlays align */
+#box{position:absolute;left:50%;top:62%;width:min(66vh,92vw,720px);aspect-ratio:1;transform:translate(-50%,-50%)}
+#orbit{position:absolute;inset:0;perspective:1100px;pointer-events:none}
+.ring{position:absolute;left:50%;top:52%;border-radius:50%;opacity:0;will-change:transform,opacity}
+#ringA{width:128%;aspect-ratio:1;border:1px solid rgba(234,255,254,.28)}
+#ringB{width:156%;aspect-ratio:1;border:1px dashed rgba(234,255,254,.16)}
+.ring::after{content:"";position:absolute;left:50%;top:-4px;width:8px;height:8px;margin-left:-4px;border-radius:50%;background:var(--aqua);box-shadow:0 0 14px 3px rgba(234,255,254,.8)}
+#rig{position:absolute;inset:0;perspective:1400px}
+#obj{position:absolute;inset:0;will-change:transform,opacity,filter}
+#obj img,#sketchwrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+#obj img{opacity:0;filter:drop-shadow(0 40px 50px rgba(0,0,0,.7))}
+#sheen{position:absolute;inset:0;mix-blend-mode:overlay;opacity:0;-webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;background:linear-gradient(104deg,transparent 38%,rgba(255,255,255,.95) 50%,transparent 62%);background-size:320% 100%}
+#sketchwrap{position:absolute;inset:0;opacity:0}
+#sketchwrap .reveal{position:absolute;inset:0;clip-path:inset(0 100% 0 0)}
+#pencil{position:absolute;top:6%;bottom:6%;width:2px;background:linear-gradient(transparent,var(--aqua),transparent);box-shadow:0 0 18px var(--aqua);opacity:0;left:0}
+#dims{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#dims path{stroke:var(--aqua);stroke-width:2.4;fill:none;vector-effect:non-scaling-stroke}
+#dims text{fill:var(--aqua);font:600 38px Montserrat,sans-serif;letter-spacing:.06em;opacity:0}
+#air{position:absolute;inset:0;width:100%;height:100%}
+.hs{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--aqua);opacity:0;box-shadow:0 0 0 0 rgba(234,255,254,.6);animation:ping 1.8s infinite;pointer-events:none}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(234,255,254,.55)}100%{box-shadow:0 0 0 18px rgba(234,255,254,0)}}
+
+/* copy */
+.copy{position:absolute;left:0;right:0;text-align:center;padding:0 20px;will-change:opacity,transform;opacity:0;pointer-events:none}
+.copy h1,.copy h2{margin:0;font-weight:800;letter-spacing:-.025em;line-height:1.02}
+.copy h1{font-size:clamp(2.6rem,9vw,7.4rem)}
+.copy h2{font-size:clamp(1.9rem,min(5.4vw,6.6vh),4.8rem)}
+.copy p.sub{margin:16px auto 0;max-width:46ch;color:var(--muted);font-size:clamp(.95rem,1.6vw,1.2rem);font-weight:300}
+.copy.top{top:11vh}.copy.mid{top:50%}
+.hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-align:center}
+.hint .skip{display:inline-block;margin-top:6px;color:var(--aqua);text-decoration:underline;text-underline-offset:3px;letter-spacing:.12em;pointer-events:auto}
+.hint::after{content:"";display:block;width:1px;height:36px;margin:10px auto 0;background:linear-gradient(var(--aqua),transparent);animation:drip 1.9s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* spec callouts */
+.spec{position:absolute;width:min(300px,42vw);opacity:0;will-change:opacity,transform;pointer-events:none}
+.spec::before{content:"";display:block;width:44px;height:2px;background:var(--aqua);margin-bottom:14px;opacity:.7}
+.spec .n{font-size:clamp(2.4rem,6.4vw,5rem);font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.spec .n small{font-size:.32em;font-weight:500;color:var(--muted);margin-left:6px;letter-spacing:.04em}
+.spec h3{margin:10px 0 4px;font-size:1rem;font-weight:600}
+.spec p{margin:0;color:var(--muted);font-size:.86rem}
+.spec.l{left:max(18px,6vw);text-align:left}
+.spec.r{right:max(18px,6vw);text-align:right}.spec.r::before{margin-left:auto}
+.spec.t{top:26vh}.spec.m{top:44vh}.spec.b{top:62vh}
+.chip{position:absolute;left:50%;bottom:3.2vh;display:flex;gap:10px;opacity:0;transform:translateX(-50%);white-space:nowrap}
+.chip span{display:flex;align-items:center;gap:8px;padding:9px 16px;border:1px solid var(--line);border-radius:999px;font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.chip span i{width:11px;height:11px;border-radius:50%;display:block;border:1px solid rgba(255,255,255,.35)}
+.chip span.on{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+
+/* ===== sections after the film ===== */
+section.s{padding:80px max(18px,6vw);max-width:1180px;margin:0 auto}
+.rv{opacity:0;transform:translateY(34px);transition:opacity 1s ease,transform 1s ease}
+.rv.in{opacity:1;transform:none}
+h2.big{font-size:clamp(1.9rem,5vw,3.6rem);line-height:1.08;margin:0 0 16px;font-weight:800;letter-spacing:-.02em}
+p.lead{color:var(--muted);max-width:56ch;margin:0 0 34px;font-weight:300;font-size:1.05rem}
+
+.feats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.feat{border:1px solid var(--line);border-radius:16px;padding:22px 18px;background:#ffffff06}
+.feat b{display:block;font-size:.98rem;margin-bottom:4px}
+.feat span{color:var(--muted);font-size:.84rem}
+.ico{width:34px;height:34px;margin-bottom:14px;stroke:var(--aqua);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+.glance{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:22px}
+.glance div{border-top:1px solid var(--line);padding-top:16px}
+.glance b{display:block;font-size:clamp(1.6rem,3.2vw,2.5rem);font-weight:800;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.glance b small{font-size:.4em;font-weight:500;color:var(--muted);margin-left:4px;letter-spacing:.03em}
+.glance span{display:block;margin-top:6px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.size{color:var(--muted);font-size:.9rem;margin:0}
+
+.finish{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+#fview{position:relative;aspect-ratio:1;border-radius:24px;background:radial-gradient(60% 60% at 50% 45%,var(--fg,#243a3f),#06100f 78%);border:1px solid var(--line);overflow:hidden}
+#fview img{position:absolute;inset:4%;width:92%;height:92%;object-fit:contain;opacity:0;transition:opacity .45s;filter:drop-shadow(0 30px 40px #000a)}
+#fview img.on{opacity:1}
+.pills{display:flex;gap:10px;margin:0 0 18px;flex-wrap:wrap}
+.pill{padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--aqua);font:600 .82rem Montserrat,sans-serif;cursor:pointer}
+.pill[aria-pressed="true"]{background:var(--aqua);color:var(--ink);border-color:var(--aqua)}
+.thumbs{display:flex;gap:10px;margin-top:18px}
+.thumb{width:68px;height:68px;border-radius:12px;border:1px solid var(--line);background:#ffffff08;padding:4px;cursor:pointer}
+.thumb[aria-pressed="true"]{border-color:var(--aqua)}
+.thumb img{width:100%;height:100%;object-fit:contain}
+
+.photo{position:relative;height:min(62vh,620px);overflow:hidden;margin:0}
+.photo img{position:absolute;left:0;top:-8%;width:100%;height:116%;object-fit:cover;object-position:50% 12%;will-change:transform}
+.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(#040b0c 0%,transparent 22%,transparent 60%,#040b0c 100%)}
+.photo figcaption{position:absolute;z-index:2;left:max(18px,6vw);bottom:9%;max-width:520px}
+.photo figcaption h2{font-size:clamp(1.8rem,4.6vw,3.4rem);margin:0 0 8px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.photo figcaption p{margin:0;color:#cfe6e6;font-weight:300}
+.photo small{display:block;margin-top:10px;font-size:.72rem;color:var(--muted)}
+
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:560px;margin-top:26px}
+.cd div{border:1px solid var(--line);border-radius:14px;padding:18px 8px;text-align:center;background:#ffffff08}
+.cd b{display:block;font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;font-variant-numeric:tabular-nums}
+.cd span{font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+#book{border-top:1px solid var(--line)}
+form{position:relative;background:#ffffff0a;border:1px solid var(--line);border-radius:20px;padding:clamp(18px,4vw,36px);max-width:780px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.full{grid-column:1/-1}
+label{display:block;font-size:.8rem;font-weight:600;margin-bottom:5px}
+.req{color:var(--err)}
+input,select,textarea{width:100%;font:inherit;font-size:.95rem;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0b1b1c;color:var(--aqua)}
+textarea{min-height:90px;resize:vertical}
+input[type=radio],input[type=checkbox]{width:auto}
+.field,.grid>*{min-width:0}
+input,select,textarea{max-width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--aqua);outline-offset:1px}
+.phone{display:flex}.phone span{display:flex;align-items:center;padding:0 12px;border:1px solid var(--line);border-right:0;border-radius:10px 0 0 10px;color:var(--muted);background:#0f2a2d}
+.phone input{border-radius:0 10px 10px 0}
+fieldset{border:0;padding:0;margin:0}legend{font-size:.8rem;font-weight:600;margin-bottom:6px;padding:0}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opts.four{grid-template-columns:repeat(4,1fr)}
+.opt{position:relative;display:block}
+.opt input{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none}
+.opt span{display:block;text-align:center;padding:12px 6px;border:1px solid var(--line);border-radius:10px;font-size:.85rem;cursor:pointer}
+.opt input:checked+span{background:var(--aqua);color:var(--ink);font-weight:600}
+.opt input:focus-visible+span{outline:2px solid var(--aqua);outline-offset:2px}
+.err-msg{display:none;color:var(--err);font-size:.76rem;margin-top:4px}
+.invalid .err-msg{display:block}.invalid input,.invalid select{border-color:var(--err)}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--muted)}
+.consent input{width:auto;margin-top:3px}
+button.submit{width:100%;padding:15px;font-size:1rem}
+button.submit:disabled{opacity:.6;cursor:wait}
+.hp{position:absolute;left:0;top:0;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.success{display:none;text-align:center;padding:40px 8px}.success h3{font-size:1.6rem;margin:0 0 8px}.success p{color:var(--muted);margin:0 auto;max-width:44ch}
+form.done .formbody{display:none}form.done .success{display:block}
+footer{border-top:1px solid var(--line);padding:26px 16px;text-align:center;font-size:.78rem;color:var(--muted)}
+
+#gl{position:absolute;left:-35%;top:-35%;width:170%;height:170%;opacity:0;pointer-events:none;will-change:opacity,filter,transform}
+body:not(.gl) #gl,body:not(.gl) #fcanvas{display:none}
+body.gl #obj{display:none}
+/* directed shots: a callout block and a leader line that follows the point on the 3D model */
+#lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;z-index:3}
+#lead path{fill:none;stroke:var(--aqua);stroke-width:1.4;opacity:.75}
+#lead circle{fill:var(--aqua)}
+#lead #lr{fill:none;stroke:var(--aqua);stroke-width:1.4;transform-box:fill-box;transform-origin:center;animation:lping 1.8s infinite}
+@keyframes lping{0%{transform:scale(1);opacity:.8}100%{transform:scale(4);opacity:0}}
+.shot{position:absolute;top:30vh;width:min(390px,38vw);opacity:0;pointer-events:none;z-index:4;will-change:opacity,transform}
+.shot.r{right:max(24px,6vw);text-align:left}.shot.l{left:max(24px,6vw);text-align:left}
+.shot .tagline{margin:0 0 14px;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.shot .n{font-size:clamp(2.8rem,6.6vw,5.6rem);font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.shot .n small{font-size:.3em;font-weight:500;color:var(--muted);margin-left:8px;letter-spacing:.04em}
+.shot h3{margin:12px 0 6px;font-size:1.15rem;font-weight:600}
+.shot p{margin:0;color:var(--muted);font-size:.92rem;max-width:34ch}
+.shot .sub2{display:flex;gap:22px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.shot .sub2 b{display:block;font-size:1.25rem;font-weight:700}.shot .sub2 span{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.shot .tag{display:inline-block;margin-top:12px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+#fcanvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+body.gl #fview img{display:none}
+.thumb.view{width:auto;height:44px;padding:0 16px;font:600 .8rem Montserrat,sans-serif;color:var(--aqua)}
+@media(max-width:820px){
+  #film{height:580vh}
+  input,select,textarea{font-size:16px}
+  .btn,.pill,.thumb{min-height:44px}
+  .chip{gap:6px;max-width:calc(100vw - 20px)}
+  .feats{grid-template-columns:1fr 1fr}
+  .glance{grid-template-columns:1fr 1fr}
+  .finish{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}.opts,.opts.four{grid-template-columns:1fr 1fr}
+  #box{top:51%;width:min(78vw,46vh)}
+  .spec{width:calc(50% - 24px);right:auto!important;text-align:left!important;top:auto!important}
+  .spec.r::before{margin-left:0}
+  .spec::before{width:28px;margin-bottom:8px}
+  .spec .n{font-size:clamp(1.7rem,8.2vw,2.5rem)}
+  .spec .n small{font-size:.38em}
+  .spec h3{font-size:.86rem;margin:6px 0 2px}
+  .spec p{display:none}
+  #s1,#s3{left:18px!important}
+  #s2,#s4{left:calc(50% + 6px)!important}
+  #s1,#s2{bottom:calc(4vh + 88px)}
+  #s3,#s4{bottom:4vh}
+  .copy.top{top:13vh}
+  .shot,.shot.l,.shot.r{left:18px;right:18px;width:auto;top:auto;bottom:calc(3vh + 4px)}
+  .shot .tagline{margin-bottom:8px}
+  .shot .n{font-size:clamp(2.2rem,11vw,3.4rem)}
+  .shot h3{margin:8px 0 4px;font-size:1rem}
+  .shot p{font-size:.84rem;max-width:none}
+  .shot .sub2{margin-top:10px;padding-top:10px;gap:18px}.shot .sub2 b{font-size:1.05rem}
+  .chip span{padding:8px 10px;font-size:.58rem;letter-spacing:.06em;gap:6px}
+  .chip span i{width:9px;height:9px}
+  nav .btn{padding:0 18px}
+  section.s{padding:52px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}.hint::after,.hs{animation:none}
+}
+
+/* ---- inside Tornado: cutaway and exploded views ---- */
+.inside{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.istage{position:relative;height:clamp(480px,80vh,840px);border-radius:24px;background:radial-gradient(60% 60% at 50% 45%,#1f3a40,#06100f 78%);border:1px solid var(--line);overflow:hidden}
+.iv{position:absolute;inset:3% 4%;display:grid;place-items:center;opacity:0;transition:opacity .5s;pointer-events:none}
+.iv.on{opacity:1;pointer-events:auto}
+.iv{container-type:size}
+.iwrap{position:relative;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--rw) / var(--rh)))}
+.iwrap>img{height:100%;width:100%;display:block;object-fit:contain;filter:drop-shadow(0 30px 40px #000a)}
+.dot{position:absolute;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;border:2px solid var(--aqua);background:#04252ccc;padding:0;cursor:pointer}
+.dot::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px solid var(--aqua);opacity:0}
+.dot[aria-pressed="true"]{background:var(--aqua)}
+.dot[aria-pressed="true"]::after{animation:dotping 1.8s ease-out infinite}
+@keyframes dotping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.itag{position:absolute;left:16px;bottom:14px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.iparts{display:flex;flex-direction:column;border-top:1px solid var(--line);margin:0 0 22px}
+.ipart{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 4px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--muted);font:600 .95rem Montserrat,sans-serif;text-align:left;cursor:pointer;transition:color .25s}
+.ipart[aria-pressed="true"]{color:var(--aqua)}
+.ipart i{width:9px;height:9px;border-radius:50%;border:1.5px solid currentColor;flex:none}
+.ipart[aria-pressed="true"] i{background:var(--aqua)}
+.idesc{margin:0;min-height:4.6em;color:var(--muted);font-weight:300;font-size:1.02rem;max-width:44ch}
+.idesc b{display:block;color:var(--aqua);font-weight:600;font-size:1.15rem;margin-bottom:6px}
+.fdesc{margin:0 0 14px;color:var(--aqua);font-weight:300;font-size:1.02rem;max-width:44ch}
+@media(max-width:820px){.inside{grid-template-columns:1fr;gap:26px}.istage{height:64vh;min-height:420px}.ipart{min-height:44px}}
+@media(prefers-reduced-motion:reduce){.dot[aria-pressed="true"]::after{animation:none}.iv{transition:none}}
+
+/* ---- video placeholder / YouTube ---- */
+.video{position:relative;aspect-ratio:16/9;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(60% 80% at 50% 45%,#1d3a40,#06100f 80%)}
+.vposter{position:absolute;left:50%;top:50%;height:92%;width:auto;transform:translate(-50%,-50%);opacity:.5;filter:drop-shadow(0 30px 40px #000a)}
+.vplay{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;border:0;background:var(--aqua);color:var(--ink);display:grid;place-items:center;cursor:pointer;transition:transform .25s}
+.vplay svg{width:34px;height:34px;fill:currentColor;margin-left:4px}
+.vplay:hover:not(:disabled){transform:scale(1.08)}
+.vplay:disabled{opacity:.55;cursor:default}
+.vsoon{position:absolute;left:16px;bottom:14px;padding:3px 10px;border:1px solid var(--line);border-radius:999px;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+@media(max-width:820px){.video{border-radius:16px}.vplay{width:68px;height:68px;margin:-34px 0 0 -34px}}
+
+
+
+/* ---- x-ray reveal and exploded bands ---- */
+.iwrap>img.xi{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 40px #000a)}
+.iwrap>img.xo{clip-path:inset(0 calc(100% - var(--h,100%)) 0 0);filter:drop-shadow(0 30px 40px #000a)}
+.xline{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:linear-gradient(to bottom,transparent,rgba(234,255,254,.9) 12%,rgba(234,255,254,.9) 88%,transparent);box-shadow:0 0 22px rgba(234,255,254,.55);pointer-events:none}
+.xh{position:absolute;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;border:0;background:var(--aqua);color:var(--ink);display:grid;place-items:center;cursor:ew-resize;touch-action:none;z-index:3;box-shadow:0 8px 30px #000a}
+.xh svg{width:22px;height:22px}
+.xh:focus-visible{outline:2px solid var(--aqua);outline-offset:4px}
+.dot.cov{opacity:0;pointer-events:none}
+.dot{transition:opacity .25s}
+#xbands .xb{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform,opacity;filter:drop-shadow(0 24px 30px #0008)}
+
+/* ---- simple hero and views ---- */
+#hero{min-height:100vh;display:flex;align-items:center;padding:96px max(18px,6vw) 40px;background:radial-gradient(70% 60% at 72% 50%,#12323a 0%,transparent 70%)}
+.hero-in{max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,80px);align-items:center}
+.hero-copy h1{font-size:clamp(2.3rem,5vw,4.6rem);line-height:1.02;margin:0 0 18px;font-weight:800;letter-spacing:-.03em}
+.hero-copy .lead{margin-bottom:30px;font-size:1.2rem}
+.hero-cta{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.textlink{color:var(--aqua);font-weight:600;font-size:.9rem;text-decoration:none;border-bottom:1px solid var(--line);padding-bottom:3px}
+.textlink:hover{border-color:var(--aqua)}
+.hero-img{display:grid;place-items:center}
+.hero-img img{width:min(100%,640px);height:auto;filter:drop-shadow(0 40px 50px #000b)}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.vcard{margin:0;border-radius:22px;border:1px solid var(--line);background:radial-gradient(60% 60% at 50% 45%,#1d3a40,#06100f 80%);overflow:hidden}
+.vimg{aspect-ratio:1;display:grid;place-items:center;padding:6%}
+.vimg img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 24px 30px #0009)}
+.vcard figcaption{padding:4px 22px 22px;display:flex;flex-direction:column;gap:4px}
+.vcard b{font-size:1.05rem}
+.vcard span{color:var(--muted);font-size:.92rem;font-weight:300}
+.photo img{top:0;height:100%;will-change:auto}
+@media(max-width:820px){.hero-in{grid-template-columns:1fr;text-align:left}.hero-img{order:-1}#hero{padding-top:84px;min-height:auto}.vgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<nav>
+  <a class="logo" href="https://euronics.co.in" aria-label="Euronics"><img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-f30389a8.png?v=1794997097" alt="Euronics" height="24"></a>
+  <a class="btn" href="#book">Book now</a>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero">
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow">Euronics &middot; 15.11.2026</p>
+      <h1>Something great<br>is coming.</h1>
+      <p class="lead">The next generation of hand drying.</p>
+      <div class="hero-cta"><a class="btn" href="#book">Start your booking</a><a class="textlink" href="#finish">See the finishes</a></div>
+    </div>
+    <div class="hero-img"><img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-8094a7a6.webp?v=1794997097" alt="Euronics Tornado stainless steel hand dryer, front view"></div>
+  </div>
+</section>
+
+<section class="s" id="views">
+  <p class="eyebrow rv">Every angle</p>
+  <h2 class="big rv">One column.<br>Two blades.</h2>
+  <p class="lead rv">Stainless steel 304. Touch-free. Brushless.</p>
+  <div class="vgrid">
+    <figure class="vcard rv"><div class="vimg"><img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-d73c5afc.webp?v=1794997196" alt="Tornado seen from below, showing the blade faces and the wall plate" loading="lazy"></div><figcaption><b>Underside</b><span>Blade faces and the wall plate.</span></figcaption></figure>
+    <figure class="vcard rv"><div class="vimg"><img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-41df08f7.webp?v=1794997097" alt="Close-up of the Tornado blades with the sensor strip and pads" loading="lazy"></div><figcaption><b>Blades</b><span>Sensor strip and pads on each blade face.</span></figcaption></figure>
+    <figure class="vcard rv"><div class="vimg"><img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-984b513d.webp?v=1794997097" alt="Tornado seen from behind and above, showing the wall plate and top vent" loading="lazy"></div><figcaption><b>Rear and top</b><span>Wall plate and top vent.</span></figcaption></figure>
+  </div>
+</section>
+
+<!-- ===================== AFTER THE FILM ===================== -->
+<section class="s" id="features">
+  <p class="eyebrow rv">Why Tornado</p>
+  <h2 class="big rv">Hygiene, engineered<br>into the details.</h2>
+  <p class="lead rv">Touch-free from start to finish, in stainless steel 304.</p>
+  <div class="feats">
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10z"/><path d="M12 21v-6"/></svg><b>Sustainable</b><span>Designed to cut single-use paper.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><b>Saves electricity</b><span>Brushless motor with automatic sensing.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="3"/><path d="M9 9h6M9 13h6"/></svg><b>Saves tissue paper</b><span>Dries hands with air, not paper.</span></div>
+    <div class="feat rv"><svg class="ico" viewBox="0 0 24 24"><path d="M7 11V6a1.5 1.5 0 0 1 3 0v4m0-1V4.5a1.5 1.5 0 0 1 3 0V10m0-.5a1.5 1.5 0 0 1 3 0V14a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-3a1.5 1.5 0 0 1 2.5-1.5L7 14"/></svg><b>Touchless operation</b><span>Sensor range of 8 to 12 cm.</span></div>
+  </div>
+</section>
+
+<section class="s" id="inside">
+  <p class="eyebrow rv">Inside Tornado</p>
+  <h2 class="big rv">Every part,<br>in one column.</h2>
+  <p class="lead rv">From the HEPA filter to the brushless motor, Tornado is built around a single stainless steel column.</p>
+  <div class="inside">
+    <div class="istage rv" id="istage">
+      <div class="iv on" id="ivcut"><div class="iwrap" id="xwrap" style="--ar:1800/1945;--rw:1800;--rh:1945">
+        <img class="xi" src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-7ea92427.webp?v=1794997097" alt="Cutaway view of Tornado showing the filter, control board, motor and air path inside the stainless steel column" loading="lazy">
+        <img class="xi xo" id="xout" src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-796f0df9.webp?v=1794997097" alt="" aria-hidden="true" loading="lazy">
+        <div class="xline" id="xline"></div>
+        <button class="xh" id="xh" type="button" role="slider" aria-label="Slide to see inside Tornado" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div id="dots"></div></div></div>
+      <div class="iv" id="ivexp"><div class="iwrap" style="--ar:1300/2404;--rw:1300;--rh:2404"><img class="xi" src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-65850cb8.webp?v=1794997098" alt="Exploded view of Tornado showing the casing, filter, control board, motor, air duct and blade assemblies" loading="lazy"></div></div>
+      <span class="itag" id="itag">Slide to see inside</span>
+    </div>
+    <div class="ipanel rv">
+      <div class="pills" id="ipills"><button class="pill" data-v="cut" aria-pressed="true">Cutaway</button><button class="pill" data-v="exp" aria-pressed="false">Exploded</button></div>
+      <div id="icut">
+        <div class="iparts" id="iparts"></div>
+        <div class="idesc" id="idesc" aria-live="polite"></div>
+      </div>
+      <div id="iexp" hidden><p class="idesc">Casing, filter, control board, motor, air duct and blade assemblies, shown apart.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="finish">
+  <div class="finish">
+    <div id="fview" class="rv" role="img" aria-label="Tornado in the selected finish and angle">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-8094a7a6.webp?v=1794997097" alt="" class="on" data-set="steel" data-i="0">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-d73c5afc.webp?v=1794997196" alt="" data-set="steel" data-i="1" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-41df08f7.webp?v=1794997097" alt="" data-set="steel" data-i="2" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-984b513d.webp?v=1794997097" alt="" data-set="steel" data-i="3" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-e6ef505c.webp?v=1794997097" alt="" data-set="gold" data-i="0" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-9a3e2b19.webp?v=1794997097" alt="" data-set="gold" data-i="1" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-905491a8.webp?v=1794997097" alt="" data-set="gold" data-i="2" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-fd591943.webp?v=1794997097" alt="" data-set="gold" data-i="3" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-0a71bf43.webp?v=1794997097" alt="" data-set="black" data-i="0" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-516cf595.webp?v=1794997195" alt="" data-set="black" data-i="1" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-e1cfb9cc.webp?v=1794997096" alt="" data-set="black" data-i="2" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-b82c1ed7.webp?v=1794997097" alt="" data-set="black" data-i="3" loading="lazy">
+    </div>
+    <div>
+      <p class="eyebrow rv">Finishes</p>
+      <h2 class="big rv">Three finishes.<br>Pick yours.</h2>
+      <div class="pills rv" id="pills"><button class="pill" data-set="steel" aria-pressed="true">Stainless steel</button><button class="pill" data-set="gold" aria-pressed="false">Gold</button><button class="pill" data-set="black" aria-pressed="false">Black</button></div>
+      <p class="fdesc rv" id="fdesc"></p>
+      <p class="lead rv" style="margin:0">Choose a finish, then a view.</p>
+      <div class="thumbs rv" id="thumbs"></div>
+    </div>
+  </div>
+</section>
+
+<figure class="photo">
+  <img src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-20ce67bc.webp?v=1794997097" alt="A Tornado hand dryer in a marble-clad washroom, in use" loading="lazy" id="phimg">
+  <figcaption class="rv">
+    <h2>Made for washrooms people remember.</h2>
+    <p>Corporate, hospitality, healthcare, education and infrastructure.</p>
+    <small>Stainless steel finish shown.</small>
+  </figcaption>
+</figure>
+
+<section class="s" id="specs">
+  <p class="eyebrow rv">At a glance</p>
+  <h2 class="big rv">What matters.</h2>
+  <div class="glance rv">
+    <div><b>110<small>m/s</small></b><span>Air speed</span></div>
+    <div><b>7&ndash;10<small>sec</small></b><span>Hand dry time</span></div>
+    <div><b>8&ndash;12<small>cm</small></b><span>Touch-free sensing</span></div>
+    <div><b>SS&nbsp;304</b><span>Casing</span></div>
+    <div><b>HEPA</b><span>Filtered air</span></div>
+  </div>
+  <p class="size rv">457 &times; 500 &times; 146 mm &middot; 220&ndash;240 V &middot; Full technical data sheet on request.</p>
+</section>
+
+<section class="s" id="when">
+  <p class="eyebrow rv">Launch</p>
+  <h2 class="big rv">Tornado arrives<br>15 November 2026.</h2>
+  <div class="cd rv" id="cd">
+    <div><b data-u="d">--</b><span>Days</span></div>
+    <div><b data-u="h">--</b><span>Hours</span></div>
+    <div><b data-u="m">--</b><span>Mins</span></div>
+    <div><b data-u="s">--</b><span>Secs</span></div>
+  </div>
+</section>
+
+<section class="s" id="watch">
+  <p class="eyebrow rv">Watch</p>
+  <h2 class="big rv">The Tornado film.</h2>
+  <div class="video rv" id="video">
+    <img class="vposter" src="https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-8094a7a6.webp?v=1794997097" alt="">
+    <button class="vplay" id="vplay" type="button" aria-label="Play the Tornado film"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+    <span class="vsoon" id="vsoon">Film coming soon</span>
+  </div>
+</section>
+
+<section class="s" id="book">
+  <p class="eyebrow rv">Early booking</p>
+  <h2 class="big rv">Start your booking now.</h2>
+  <p class="lead rv">Tell us about your requirement and we will contact you with launch details and early-booking availability. Booking requests are subject to confirmation.</p>
+
+  <form class="rv" id="f" novalidate>
+    <div class="formbody"><div class="grid">
+      <div class="field"><label for="name">Full name <span class="req">*</span></label><input id="name" name="name" autocomplete="name" required><div class="err-msg">Please enter your name.</div></div>
+      <div class="field"><label for="company">Company / organisation <span class="req">*</span></label><input id="company" name="company" autocomplete="organization" required><div class="err-msg">Please enter your organisation.</div></div>
+      <div class="field"><label for="email">Work email <span class="req">*</span></label><input id="email" name="email" type="email" autocomplete="email" required><div class="err-msg">Enter a valid email address.</div></div>
+      <div class="field"><label for="phone">Mobile <span class="req">*</span></label><div class="phone"><span>+91</span><input id="phone" name="phone" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="10-digit number" required></div><div class="err-msg">Enter a valid 10-digit mobile number.</div></div>
+      <div class="field"><label for="city">City <span class="req">*</span></label><input id="city" name="city" autocomplete="address-level2" required><div class="err-msg">Please enter your city.</div></div>
+      <div class="field"><label for="sector">Sector</label><select id="sector" name="sector"><option value="">Select</option><option>Corporate</option><option>Hospitality</option><option>Healthcare</option><option>Education</option><option>Industrial</option><option>Government</option><option>Infrastructure</option><option>Other</option></select></div>
+      <fieldset class="full"><legend>Preferred finish</legend>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="finish" value="Stainless steel"><span>Stainless steel</span></label>
+          <label class="opt"><input type="radio" name="finish" value="Gold"><span>Gold</span></label>
+          <label class="opt"><input type="radio" name="finish" value="Black"><span>Black</span></label>
+        </div></fieldset>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="consent full"><input type="checkbox" id="consent" required><span>I agree to be contacted by Euronics about Tornado. <span class="req">*</span></span></label>
+      <div class="full"><button class="btn submit" type="submit">Book now</button><div class="err-msg" id="formerr" style="text-align:center;margin-top:8px"></div></div>
+    </div></div>
+    <div class="success" role="status" aria-live="polite"><h3>You are on the list.</h3><p id="okmsg">Thank you. Our team will be in touch with launch details and early-booking availability.</p></div>
+  </form>
+</section>
+
+<footer>&copy; Euronics Industries Pvt. Ltd. &middot; Elevating Hygiene Everyday<br><small style="opacity:.6">Demo preview: the live booking form and analytics are switched off on this link.</small></footer>
+
+<script>
+const CONFIG = {
+  youtube: "",                      // paste the YouTube link or 11-character video ID here to switch the film on (watch?v=, youtu.be and embed links all work)
+  endpoint: "",
+  launch: "2026-11-15T00:00:00+05:30",
+  ga4: "",            // same Google Analytics 4 property as the store; filter by hostname. "" turns it off
+  metaPixel: ""    // same Meta pixel as the store. "" turns it off
+};
+const $ = id => document.getElementById(id);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const seg = (p, a, b) => clamp((p - a) / (b - a));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 0..1: fade in over [a,b], hold, fade out over [c,d]
+const win = (p, a, b, c, d) => Math.min(seg(p, a, b), 1 - seg(p, c, d));
+
+/* ---------- analytics (loads only when an ID is set) ---------- */
+window.dataLayer = window.dataLayer || [];
+function gtag() { dataLayer.push(arguments); }
+if (CONFIG.ga4) {
+  const g = document.createElement("script"); g.async = true; g.src = "https://www.googletagmanager.com/gtag/js?id=" + CONFIG.ga4; document.head.appendChild(g);
+  gtag("js", new Date()); gtag("config", CONFIG.ga4);
+}
+if (CONFIG.metaPixel) {
+  !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+  fbq("init", CONFIG.metaPixel); fbq("track", "PageView");
+}
+function track(name, params, metaEvent) {
+  try { if (CONFIG.ga4) gtag("event", name, params || {}); if (CONFIG.metaPixel && metaEvent) fbq("track", metaEvent, params || {}); } catch (_) { /* tracking must never break the page */ }
+}
+
+/* ---------- where this visitor came from (first touch is remembered) ---------- */
+const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+function readUtm() {
+  const q = new URLSearchParams(location.search), now = {};
+  UTM_KEYS.forEach(k => { const v = (q.get(k) || "").slice(0, 100); if (v) now[k] = v; });
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem("tornado_utm") || "{}"); if (Object.keys(now).length && !Object.keys(saved).length) localStorage.setItem("tornado_utm", JSON.stringify(now)); } catch (_) { /* storage can be blocked */ }
+  return Object.keys(now).length ? now : saved;
+}
+const UTM = readUtm();
+let referrer = "";
+try { const r = new URL(document.referrer); if (r.hostname && r.hostname !== location.hostname) referrer = (r.hostname + r.pathname).slice(0, 200); } catch (_) { /* no referrer */ }
+const finishesViewed = new Set(["steel"]);
+
+/* ---------- reveal on scroll ---------- */
+const io = new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting) { x.target.classList.add("in"); io.unobserve(x.target); } }), { threshold: .12 });
+document.querySelectorAll(".rv").forEach(el => io.observe(el));
+
+/* ---------- finish viewer: pick a finish, then a view ---------- */
+const IMGSRC = {"steel-1":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-8094a7a6.webp?v=1794997097","steel-2":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-d73c5afc.webp?v=1794997196","steel-3":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-41df08f7.webp?v=1794997097","steel-4":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-984b513d.webp?v=1794997097","gold-1":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-e6ef505c.webp?v=1794997097","gold-2":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-9a3e2b19.webp?v=1794997097","gold-3":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-905491a8.webp?v=1794997097","gold-4":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-fd591943.webp?v=1794997097","black-1":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-0a71bf43.webp?v=1794997097","black-2":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-516cf595.webp?v=1794997195","black-3":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-e1cfb9cc.webp?v=1794997096","black-4":"https://cdn.shopify.com/s/files/1/0660/2070/4446/files/tornado-lp-b82c1ed7.webp?v=1794997097"};
+const sets = { steel: ["steel-1","steel-2","steel-3","steel-4"], gold: ["gold-1","gold-2","gold-3","gold-4"], black: ["black-1","black-2","black-3","black-4"] };
+const fdescs = { steel: "Fine vertical hairline texture. Semi-matte satin.", gold: "Light brushed champagne gold. Fine vertical hairline texture, semi-matte satin.", black: "Matte black. Fine vertical hairline texture, semi-matte satin." };
+const tints = { steel: "#2a444a", gold: "#37321a", black: "#1d3c43" };
+const fview = $("fview"), thumbs = $("thumbs"), pills = $("pills");
+let fset = "steel", fi = 0;
+function showF() {
+  fview.style.setProperty("--fg", tints[fset]);
+  $("fdesc").textContent = fdescs[fset];
+  pills.querySelectorAll(".pill").forEach(b => b.setAttribute("aria-pressed", b.dataset.set === fset));
+  fview.querySelectorAll("img").forEach(im => im.classList.toggle("on", im.dataset.set === fset && +im.dataset.i === fi));
+  thumbs.innerHTML = "";
+  sets[fset].forEach((n, i) => { const b = document.createElement("button"); b.className = "thumb"; b.setAttribute("aria-label", ["Front","Underside","Close-up","Rear"][i] + " view"); b.setAttribute("aria-pressed", i === fi); b.innerHTML = '<img src="' + IMGSRC[n] + '" alt="">'; b.onclick = () => { fi = i; showF(); }; thumbs.appendChild(b); });
+}
+pills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; fset = b.dataset.set; fi = 0; finishesViewed.add(fset); track("finish_select", { finish: fset }); showF(); });
+showF();
+
+/* ---------- inside Tornado: cutaway hotspots and exploded view ---------- */
+const PARTS = [
+  { t: "HEPA filter", d: "A HEPA filter sits in the air path.", x: 50, y: 11 },
+  { t: "Control board", d: "Automatic, touch-free operation.", x: 45, y: 31 },
+  { t: "Brushless motor", d: "700 W motor power. 1,450 W rated power.", x: 50, y: 46 },
+  { t: "Air path", d: "Air runs through the column to both blades. Rated air speed 110 m/s at the blades.", x: 50, y: 66 },
+  { t: "Touch-free blades", d: "Sensor range of 8 to 12 cm.", x: 15, y: 90 }
+];
+const ivs = { cut: $("ivcut"), exp: $("ivexp") }, ipills = $("ipills"), iparts = $("iparts"), idesc = $("idesc"), dotsEl = $("dots");
+let ipi = 0;
+PARTS.forEach((p, i) => {
+  const dot = document.createElement("button"); dot.className = "dot"; dot.style.left = p.x + "%"; dot.style.top = p.y + "%"; dot.setAttribute("aria-label", p.t); dot.dataset.i = i; dotsEl.appendChild(dot);
+  const row = document.createElement("button"); row.className = "ipart"; row.dataset.i = i; row.innerHTML = "<span>" + p.t + "</span><i></i>"; iparts.appendChild(row);
+});
+function showPart(i) {
+  ipi = i;
+  document.querySelectorAll("#dots .dot, #iparts .ipart").forEach(b => b.setAttribute("aria-pressed", +b.dataset.i === i));
+  idesc.innerHTML = "<b>" + PARTS[i].t + "</b>" + PARTS[i].d;
+}
+function showInside(v) {
+  xtag.textContent = v === "cut" ? "Slide to see inside" : "Illustrative";
+  Object.keys(ivs).forEach(k => ivs[k].classList.toggle("on", k === v));
+  ipills.querySelectorAll(".pill").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+  $("icut").hidden = v !== "cut"; $("iexp").hidden = v !== "exp";
+}
+$("istage").addEventListener("click", e => { const d = e.target.closest(".dot"); if (d) showPart(+d.dataset.i); });
+iparts.addEventListener("click", e => { const r = e.target.closest(".ipart"); if (r) showPart(+r.dataset.i); });
+ipills.addEventListener("click", e => { const b = e.target.closest(".pill"); if (!b) return; showInside(b.dataset.v); track("inside_view", { view: b.dataset.v }); });
+/* ---------- x-ray: slide the steel exterior away to see inside ---------- */
+const xwrap = $("xwrap"), xh = $("xh"), xline = $("xline"), xtag = $("itag");
+const dotEls = () => document.querySelectorAll("#dots .dot");
+let xpos = 100, xdrag = false, xraf = 0, xplayed = false;
+function setX(v) {
+  xpos = clamp(v, 0, 100); xwrap.style.setProperty("--h", xpos + "%"); xh.style.left = xline.style.left = xpos + "%";
+  xh.setAttribute("aria-valuenow", Math.round(100 - xpos));
+  dotEls().forEach((d, i) => d.classList.toggle("cov", PARTS[i].x < xpos));
+}
+const clamp100 = v => clamp(v, 0, 100);
+function xTo(target, ms) {
+  cancelAnimationFrame(xraf); if (reduce) { setX(target); return; }
+  const from = xpos, t0 = performance.now();
+  const step = t => { const k = clamp((t - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; setX(from + (target - from) * e); if (k < 1) xraf = requestAnimationFrame(step); };
+  xraf = requestAnimationFrame(step);
+}
+function xFromEvent(e) { const r = xwrap.getBoundingClientRect(); setX((e.clientX - r.left) / r.width * 100); }
+xh.addEventListener("pointerdown", e => { xdrag = true; cancelAnimationFrame(xraf); xh.setPointerCapture(e.pointerId); xplayed = true; e.preventDefault(); });
+xh.addEventListener("pointermove", e => { if (xdrag) xFromEvent(e); });
+const xUp = () => { xdrag = false; }; xh.addEventListener("pointerup", xUp); xh.addEventListener("pointercancel", xUp);
+xh.addEventListener("keydown", e => { const k = { ArrowLeft: -5, ArrowRight: 5, Home: -100, End: 100 }[e.key]; if (k === undefined) return; e.preventDefault(); xplayed = true; setX(xpos + k); });
+xwrap.addEventListener("pointerdown", e => { if (e.target.closest(".dot, .xh")) return; xplayed = true; cancelAnimationFrame(xraf); xFromEvent(e); xdrag = true; xh.setPointerCapture(e.pointerId); });
+setX(100);
+new IntersectionObserver((es, io) => { if (es[0].isIntersecting && !xplayed) { xplayed = true; setTimeout(() => xTo(0, 2600), 500); io.disconnect(); } }, { threshold: .45 }).observe(xwrap);
+
+/* ---------- launch film (YouTube, click to play) ---------- */
+const ytId = (() => { const v = String(CONFIG.youtube || "").trim(); const m = v.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/) || v.match(/^([\w-]{11})$/); return m ? m[1] : ""; })();
+{
+  const video = $("video"), vplay = $("vplay");
+  if (ytId) {
+    $("vsoon").hidden = true;
+    vplay.addEventListener("click", () => {
+      video.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&rel=0&modestbranding=1&playsinline=1" title="Tornado launch film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      track("video_play", { video_id: ytId });
+    });
+  } else { vplay.disabled = true; }
+}
+
+/* ---------- countdown ---------- */
+const target0 = new Date(CONFIG.launch).getTime(), cd = $("cd");
+function tick() {
+  const s = Math.max(0, Math.floor((target0 - Date.now()) / 1000));
+  const v = { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
+  for (const k in v) cd.querySelector('[data-u="' + k + '"]').textContent = String(v[k]).padStart(2, "0");
+}
+tick(); setInterval(tick, 1000);
+
+/* ---------- booking form -> Google Sheet ---------- */
+const f = $("f");
+const rules = {
+  name: v => v.trim().length > 1, company: v => v.trim().length > 1,
+  email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v),
+  phone: v => /^[6-9]\d{9}$/.test(v), city: v => v.trim().length > 1
+};
+function check() {
+  let ok = true;
+  for (const k in rules) { const el = f.elements[k], good = rules[k](el.value); el.closest(".field").classList.toggle("invalid", !good); if (!good) ok = false; }
+  return ok;
+}
+f.elements.phone.addEventListener("input", e => e.target.value = e.target.value.replace(/\D/g, ""));
+let started = false;
+f.addEventListener("focusin", () => { if (!started) { started = true; track("form_start", {}); } });
+f.addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("formerr"); err.textContent = ""; err.style.display = "none";
+  if (!check()) return;
+  if (!$("consent").checked) { err.textContent = "Please confirm consent to continue."; err.style.display = "block"; return; }
+  if (f.elements.website.value) return;
+  const btn = f.querySelector("button.submit"); btn.disabled = true;
+  const data = Object.fromEntries(new FormData(f)); delete data.website;
+  const finish = data.finish; delete data.finish;
+  data.notes = (finish ? "Preferred finish: " + finish + ". " : "") + (data.notes || "");
+  Object.assign(data, UTM, { phone: "+91" + data.phone, product: "Tornado", source: "tornado-launch-page", submittedAt: new Date().toISOString(), referrer, finishViewed: [...finishesViewed].join(","), consent: "yes" });
+  try {
+    if (CONFIG.endpoint) {
+      const r = await fetch(CONFIG.endpoint, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(data) });
+      if (!r.ok) throw new Error("bad status");
+    } else { console.info("Tornado lead (no endpoint configured, not sent):", data); }
+    track("generate_lead", { sector: data.sector, finish: finish || "not chosen", utm_source: UTM.utm_source || "", utm_content: UTM.utm_content || "" }, "Lead");
+    f.classList.add("done");
+  } catch (_) { err.textContent = "Something went wrong. Please try again."; err.style.display = "block"; btn.disabled = false; }
+});
+</script>
+</body>
+</html>
