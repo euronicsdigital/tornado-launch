@@ -315,8 +315,8 @@ body.gl #fview img{display:none}
 @keyframes float{0%,100%{translate:0 0}50%{translate:0 -10px}}
 .air{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .air .curtain{fill:url(#acg)}
-.air .streams path{stroke-dasharray:7 5;animation:airflow .8s linear infinite}
-.air .streams path:nth-child(1){animation-delay:-0.00s}.air .streams path:nth-child(2){animation-delay:-0.37s}.air .streams path:nth-child(3){animation-delay:-0.74s}.air .streams path:nth-child(4){animation-delay:-0.31s}.air .streams path:nth-child(5){animation-delay:-0.68s}.air .streams path:nth-child(6){animation-delay:-0.25s}.air .streams path:nth-child(7){animation-delay:-0.62s}.air .streams path:nth-child(8){animation-delay:-0.19s}.air .streams path:nth-child(9){animation-delay:-0.56s}.air .streams path:nth-child(10){animation-delay:-0.13s}.air .streams path:nth-child(11){animation-delay:-0.50s}.air .streams path:nth-child(12){animation-delay:-0.07s}.air .streams path:nth-child(13){animation-delay:-0.44s}.air .streams path:nth-child(14){animation-delay:-0.01s}.air .streams path:nth-child(15){animation-delay:-0.38s}.air .streams path:nth-child(16){animation-delay:-0.75s}.air .streams path:nth-child(17){animation-delay:-0.32s}.air .streams path:nth-child(18){animation-delay:-0.69s}.air .streams path:nth-child(19){animation-delay:-0.26s}.air .streams path:nth-child(20){animation-delay:-0.63s}
+.air .streams path{stroke-dasharray:7 5;animation:airflow .42s linear infinite}
+.air .streams path:nth-child(1){animation-delay:-0.00s}.air .streams path:nth-child(2){animation-delay:-0.19s}.air .streams path:nth-child(3){animation-delay:-0.38s}.air .streams path:nth-child(4){animation-delay:-0.15s}.air .streams path:nth-child(5){animation-delay:-0.34s}.air .streams path:nth-child(6){animation-delay:-0.11s}.air .streams path:nth-child(7){animation-delay:-0.30s}.air .streams path:nth-child(8){animation-delay:-0.07s}.air .streams path:nth-child(9){animation-delay:-0.26s}.air .streams path:nth-child(10){animation-delay:-0.03s}.air .streams path:nth-child(11){animation-delay:-0.22s}.air .streams path:nth-child(12){animation-delay:-0.41s}.air .streams path:nth-child(13){animation-delay:-0.18s}.air .streams path:nth-child(14){animation-delay:-0.37s}.air .streams path:nth-child(15){animation-delay:-0.14s}.air .streams path:nth-child(16){animation-delay:-0.33s}.air .streams path:nth-child(17){animation-delay:-0.10s}.air .streams path:nth-child(18){animation-delay:-0.29s}.air .streams path:nth-child(19){animation-delay:-0.06s}.air .streams path:nth-child(20){animation-delay:-0.25s}
 @keyframes airflow{from{stroke-dashoffset:12}to{stroke-dashoffset:0}}
 .marquee{overflow:hidden;border-block:1px solid var(--line);padding:22px 0;background:linear-gradient(90deg,#040b0c,#0b1d21 50%,#040b0c)}
 .track{display:flex;gap:34px;width:max-content;animation:marq 38s linear infinite;align-items:center}
@@ -339,6 +339,15 @@ body.gl #fview img{display:none}
 @media(prefers-reduced-motion:reduce){.heroprod,.air path,.track{animation:none}.hero-copy h1 .ln>span,.hero-copy .eyebrow,.hero-copy .lead,.hero-cta,.heroprod img{animation:none;transform:none;opacity:1}}
 
 button,input,select,textarea,svg text{font-family:var(--font)}
+
+/* ---- mini tornado that follows the cursor ---- */
+.twister{position:fixed;left:0;top:0;width:58px;height:70px;margin:4px 0 0 -29px;pointer-events:none;z-index:200;opacity:0;transition:opacity .3s;will-change:transform;filter:drop-shadow(0 0 5px rgba(127,243,255,.7)) drop-shadow(0 0 14px rgba(127,243,255,.35))}
+.twister.on{opacity:1}
+.twister svg{width:100%;height:100%;overflow:visible}
+.twister .tr{stroke-dasharray:9 5;animation:tspin .5s linear infinite,tsway 1.1s ease-in-out infinite alternate;animation-delay:calc(var(--d) * -1),calc(var(--d) * -3);transform-box:fill-box;transform-origin:center}
+@keyframes tspin{to{stroke-dashoffset:-28}}
+@keyframes tsway{from{transform:translateX(-2.5px)}to{transform:translateX(2.5px)}}
+@media (hover:none),(pointer:coarse),(prefers-reduced-motion:reduce){.twister{display:none}}
 </style>
 </head>
 <body>
@@ -349,6 +358,7 @@ button,input,select,textarea,svg text{font-family:var(--font)}
 </nav>
 
 <div class="cursorlight" id="cl" aria-hidden="true"></div>
+<div class="twister" id="twister" aria-hidden="true"><svg viewBox="0 0 60 72"><defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7ff3ff" stop-opacity=".55"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7ff3ff" stop-opacity=".55"/></linearGradient></defs><g fill="none" stroke="url(#tg)" stroke-linecap="round"><ellipse class="tr" cx="30" cy="6.0" rx="22.0" ry="5.7" stroke-width="2.16" style="--d:0.00s;opacity:0.95"/><ellipse class="tr" cx="30" cy="14.3" rx="19.4" ry="5.0" stroke-width="2.03" style="--d:0.07s;opacity:0.90"/><ellipse class="tr" cx="30" cy="22.6" rx="16.7" ry="4.3" stroke-width="1.89" style="--d:0.14s;opacity:0.85"/><ellipse class="tr" cx="30" cy="30.9" rx="14.1" ry="3.7" stroke-width="1.76" style="--d:0.21s;opacity:0.80"/><ellipse class="tr" cx="30" cy="39.1" rx="11.4" ry="3.0" stroke-width="1.62" style="--d:0.28s;opacity:0.75"/><ellipse class="tr" cx="30" cy="47.4" rx="8.8" ry="2.3" stroke-width="1.49" style="--d:0.35s;opacity:0.70"/><ellipse class="tr" cx="30" cy="55.7" rx="6.1" ry="1.6" stroke-width="1.35" style="--d:0.42s;opacity:0.65"/><ellipse class="tr" cx="30" cy="64.0" rx="3.5" ry="1.4" stroke-width="1.22" style="--d:0.49s;opacity:0.60"/></g></svg></div>
 <!-- ===================== HERO ===================== -->
 <section id="hero">
   <div class="mega" id="mega" aria-hidden="true">TORNADO</div>
@@ -648,6 +658,17 @@ new IntersectionObserver((es, io) => { if (es[0].isIntersecting && !xplayed) { x
   }, { passive: true });
   if (!reduce && matchMedia("(hover:hover) and (pointer:fine)").matches) {
     addEventListener("pointermove", e => { cl.classList.add("on"); cl.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px)"; }, { passive: true });
+  }
+  // mini tornado under the cursor (desktop only); it trails the pointer slightly, which reads as a moving twister
+  const tw = $("twister");
+  if (!reduce && matchMedia("(hover:hover) and (pointer:fine)").matches) {
+    let tx = -100, ty = -100, cx = -100, cy = -100, traf = 0, tilt = 0;
+    const tick = () => { const dx = tx - cx; cx += dx * .22; cy += (ty - cy) * .22; tilt += ((dx * .6) - tilt) * .2;
+      tw.style.transform = "translate(" + cx.toFixed(1) + "px," + cy.toFixed(1) + "px) rotate(" + Math.max(-18, Math.min(18, tilt)).toFixed(1) + "deg)";
+      traf = (Math.abs(tx - cx) + Math.abs(ty - cy) > .3) ? requestAnimationFrame(tick) : 0; };
+    addEventListener("pointermove", e => { tx = e.clientX; ty = e.clientY; tw.classList.add("on"); if (!traf) traf = requestAnimationFrame(tick); }, { passive: true });
+    document.addEventListener("pointerleave", () => tw.classList.remove("on"));
+    document.addEventListener("mouseout", e => { if (!e.relatedTarget) tw.classList.remove("on"); });
   }
   // counting up the headline numbers once they come into view
   const nums = [...document.querySelectorAll(".glance b")].filter(b => /^\d+/.test(b.firstChild && b.firstChild.nodeValue || ""));
